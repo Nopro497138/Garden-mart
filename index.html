@@ -113,28 +113,59 @@
       position: fixed;
       top: 0;
       right: 0;
-      background: #fafafa;
-      color: #111;
-      width: 300px;
+      background: #1b1b1b;
+      color: #fff;
+      width: 350px;
       height: 100%;
       padding: 20px;
       display: none;
       flex-direction: column;
       overflow-y: auto;
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.6);
+      box-shadow: -5px 0 25px rgba(0, 255, 100, 0.3);
+      z-index: 1001;
     }
     .cart-overlay.active {
       display: flex;
     }
+    .cart-overlay .close-btn {
+      align-self: flex-end;
+      background: #f44336;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .cart-overlay ul {
+      list-style: none;
+      padding: 0;
+    }
+    .cart-overlay li {
+      margin: 10px 0;
+      background: #333;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .cart-overlay li button {
+      margin-left: 10px;
+      background: #f44336;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
     .buy-now {
       margin-top: 20px;
       padding: 10px;
-      background: #007e4f;
-      color: white;
+      background: #00e676;
+      color: black;
       border: none;
       border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
+      box-shadow: 0 0 15px rgba(0,255,100,0.5);
     }
     .payment-popup {
       display: none;
@@ -147,8 +178,8 @@
       padding: 25px;
       border-radius: 10px;
       border: 2px solid #00c853;
-      box-shadow: 0 0 25px rgba(0, 255, 100, 0.2);
-      z-index: 1000;
+      box-shadow: 0 0 25px rgba(0, 255, 100, 0.5);
+      z-index: 1002;
     }
     .payment-popup.active {
       display: block;
@@ -162,6 +193,10 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
+    }
+    .payment-popup .close-btn {
+      background: #f44336;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -180,11 +215,29 @@
       <button onclick="filterCategory('exclusives')">Exclusives</button>
     </div>
     <div class="products" id="product-list">
-      <!-- Product Cards bleiben gleich -->
+      <div class="product" data-category="pets">
+        <img src="images/kitsune.png" alt="Kitsune">
+        <h3>Kitsune</h3>
+        <p>$49.99</p>
+        <button onclick="addToCart('Kitsune', 49.99)">Add To Cart</button>
+      </div>
+      <div class="product" data-category="bundles">
+        <img src="images/kitsune_bundle.png" alt="Kitsune Bundle">
+        <h3>Kitsune Bundle</h3>
+        <p>$50.99</p>
+        <button onclick="addToCart('Kitsune Bundle', 50.99)">Add To Cart</button>
+      </div>
+      <div class="product" data-category="exclusives">
+        <img src="images/moon_cat.png" alt="Moon Cat">
+        <h3>Moon Cat</h3>
+        <p>$2.99</p>
+        <button onclick="addToCart('Moon Cat', 2.99)">Add To Cart</button>
+      </div>
     </div>
   </div>
 
   <div class="cart-overlay" id="cart">
+    <button class="close-btn" onclick="toggleCart()">Close</button>
     <h2>Your Cart</h2>
     <ul id="cart-items"></ul>
     <button class="buy-now" onclick="openPayment()">Buy Now</button>
@@ -197,6 +250,7 @@
       <li><label><input type="radio" name="pay" value="remitly" /> Remitly</label></li>
     </ul>
     <button onclick="processPayment()">Continue to Payment</button>
+    <button class="close-btn" onclick="closePayment()">Cancel</button>
   </div>
 
   <audio id="click-sound" src="click.mp3"></audio>
@@ -213,18 +267,30 @@
       document.getElementById("cart-count").textContent = cart.length;
       renderCart();
     }
+    function removeItem(index) {
+      cart.splice(index, 1);
+      document.getElementById("cart-count").textContent = cart.length;
+      renderCart();
+    }
     function renderCart() {
       const list = document.getElementById("cart-items");
       list.innerHTML = "";
-      cart.forEach((item) => {
+      cart.forEach((item, index) => {
         const li = document.createElement("li");
-        li.textContent = `${item.name} - $${item.price}`;
+        li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+        const btn = document.createElement("button");
+        btn.textContent = "Remove";
+        btn.onclick = () => removeItem(index);
+        li.appendChild(btn);
         list.appendChild(li);
       });
     }
     function openPayment() {
       document.getElementById("payment").classList.add("active");
       document.getElementById("click-sound").play();
+    }
+    function closePayment() {
+      document.getElementById("payment").classList.remove("active");
     }
     function processPayment() {
       document.getElementById("click-sound").play();
