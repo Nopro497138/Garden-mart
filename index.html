@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PetMart</title>
+  <title>Garden Mart</title>
   <style>
     body {
       margin: 0;
@@ -12,32 +12,28 @@
       color: #fff;
       animation: fadeIn 1s ease;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
     header {
-      background: #00a651;
+      background: #006a45;
       padding: 15px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       animation: slideDown 1s ease;
     }
-
     @keyframes slideDown {
       from { transform: translateY(-100%); }
       to { transform: translateY(0); }
     }
-
     header h1 {
       margin: 0;
     }
     .cart-button {
       background: white;
-      color: #00a651;
+      color: #006a45;
       padding: 8px 12px;
       border: none;
       border-radius: 4px;
@@ -59,7 +55,7 @@
       display: block;
       width: 100%;
       margin-bottom: 10px;
-      background: #00a651;
+      background: #006a45;
       border: none;
       color: white;
       padding: 10px;
@@ -67,7 +63,7 @@
       transition: background 0.3s ease;
     }
     .sidebar button:hover {
-      background: #007f3f;
+      background: #004d33;
     }
     .products {
       flex: 1;
@@ -85,12 +81,10 @@
       text-align: center;
       animation: popIn 0.5s ease;
     }
-
     @keyframes popIn {
       from { transform: scale(0.8); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
-
     .product img {
       width: 100%;
       height: auto;
@@ -113,16 +107,14 @@
       display: flex;
       animation: slideInRight 0.3s ease;
     }
-
     @keyframes slideInRight {
       from { transform: translateX(100%); }
       to { transform: translateX(0); }
     }
-
     .buy-now {
       margin-top: 20px;
       padding: 10px;
-      background: #00a651;
+      background: #006a45;
       color: white;
       border: none;
       cursor: pointer;
@@ -143,53 +135,61 @@
       display: block;
       animation: fadeIn 0.5s ease;
     }
+    .payment-popup button {
+      margin-top: 15px;
+      padding: 10px;
+      background: #006a45;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
   </style>
 </head>
-<body>
+<body onclick="document.getElementById('click-sound').play()">
   <header>
-    <h1>PetMart</h1>
+    <h1>Garden Mart</h1>
     <button class="cart-button" onclick="toggleCart()">Cart (<span id="cart-count">0</span>)</button>
   </header>
   <div class="container">
     <div class="sidebar">
-      <button>All Products</button>
-      <button>Pets</button>
-      <button>Sheckles</button>
-      <button>Bundles</button>
-      <button>Exclusives</button>
+      <button onclick="filterCategory('all')">All Products</button>
+      <button onclick="filterCategory('pets')">Pets</button>
+      <button onclick="filterCategory('sheckles')">Sheckles</button>
+      <button onclick="filterCategory('bundles')">Bundles</button>
+      <button onclick="filterCategory('exclusives')">Exclusives</button>
     </div>
     <div class="products" id="product-list">
-      <div class="product">
+      <div class="product" data-category="pets">
         <img src="images/kitsune.png" alt="Kitsune" />
         <h3>Kitsune</h3>
         <p>$49.99</p>
         <button onclick="addToCart('Kitsune', 49.99)">Add To Cart</button>
       </div>
-      <div class="product">
+      <div class="product" data-category="pets">
         <img src="images/corrupted-kitsune.png" alt="Corrupted Kitsune" />
         <h3>Corrupted Kitsune</h3>
         <p>$8.99</p>
         <button onclick="addToCart('Corrupted Kitsune', 8.99)">Add To Cart</button>
       </div>
-      <div class="product">
+      <div class="product" data-category="bundles">
         <img src="images/disco-bee.png" alt="Disco Bee" />
         <h3>Disco Bee</h3>
         <p>$19.99</p>
         <button onclick="addToCart('Disco Bee', 19.99)">Add To Cart</button>
       </div>
-      <div class="product">
+      <div class="product" data-category="exclusives">
         <img src="images/fennec-fox.png" alt="Fennec Fox" />
         <h3>Fennec Fox</h3>
         <p>$16.99</p>
         <button onclick="addToCart('Fennec Fox', 16.99)">Add To Cart</button>
       </div>
-      <div class="product">
+      <div class="product" data-category="pets">
         <img src="images/moon-cat.png" alt="Moon Cat" />
         <h3>Moon Cat</h3>
         <p>$2.99</p>
         <button onclick="addToCart('Moon Cat', 2.99)">Add To Cart</button>
       </div>
-      <div class="product">
+      <div class="product" data-category="pets">
         <img src="images/red-fox.png" alt="Red Fox" />
         <h3>Red Fox</h3>
         <p>$4.99</p>
@@ -207,10 +207,10 @@
   <div class="payment-popup" id="payment">
     <h3>Select Payment Method</h3>
     <ul>
-      <li><input type="radio" name="pay" /> Credit Card</li>
-      <li><input type="radio" name="pay" /> PayPal</li>
-      <li><input type="radio" name="pay" /> Crypto</li>
+      <li><label><input type="radio" name="pay" value="paypal" /> PayPal</label></li>
+      <li><label><input type="radio" name="pay" value="remitly" /> Remitly</label></li>
     </ul>
+    <button onclick="processPayment()">Continue to Payment</button>
   </div>
 
   <audio id="click-sound" src="click.mp3"></audio>
@@ -224,6 +224,7 @@
     }
 
     function addToCart(name, price) {
+      document.getElementById("click-sound").play();
       cart.push({ name, price });
       document.getElementById("cart-count").textContent = cart.length;
       renderCart();
@@ -241,6 +242,33 @@
 
     function openPayment() {
       document.getElementById("payment").classList.add("active");
+      document.getElementById("click-sound").play();
+    }
+
+    function processPayment() {
+      document.getElementById("click-sound").play();
+      const selected = document.querySelector('input[name="pay"]:checked');
+      if (!selected) {
+        alert("Please select a payment method.");
+        return;
+      }
+      if (selected.value === "paypal") {
+        window.location.href = "https://www.paypal.com/checkout";
+      } else if (selected.value === "remitly") {
+        window.location.href = "https://www.remitly.com/";
+      }
+    }
+
+    function filterCategory(category) {
+      const products = document.querySelectorAll(".product");
+      products.forEach(p => {
+        const cat = p.getAttribute("data-category");
+        if (category === "all" || cat === category) {
+          p.style.display = "block";
+        } else {
+          p.style.display = "none";
+        }
+      });
       document.getElementById("click-sound").play();
     }
   </script>
