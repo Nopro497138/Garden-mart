@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SillyZoo.biz - The Only Zoo You Can’t Visit</title>
+  <style>
+    body {
+      background-color: #fffbcc;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #222;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(to right, #ff8a00, #e52e71);
+      color: white;
+      padding: 20px;
+      font-size: 36px;
+      text-shadow: 2px 2px black;
+    }
+    marquee {
+      font-size: 20px;
+      color: red;
+      font-weight: bold;
+      background-color: yellow;
+    }
+    .product {
+      display: inline-block;
+      border: 3px dashed #e52e71;
+      padding: 15px;
+      margin: 20px;
+      background-color: #fff;
+      width: 250px;
+      vertical-align: top;
+    }
+    .product img {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+    }
+    .buy-button {
+      background-color: limegreen;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      animation: wiggle 0.5s infinite alternate;
+    }
+    @keyframes wiggle {
+      from { transform: rotate(-2deg); }
+      to { transform: rotate(2deg); }
+    }
+    footer {
+      margin-top: 50px;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    🐸 SillyZoo.biz - The Only Zoo That Ships Animals To Your Inbox!
+  </header>
+
+  <marquee scrollamount="10">NEW: Invisible Hamster - only $999.99! 🐹✨ Totally real.</marquee>
+
+  <div class="product">
+    <img src="https://media.tenor.com/6Yv0QcsCRd0AAAAi/frog-vibing.gif" alt="Vibing Frog">
+    <h2>Vibing Frog</h2>
+    <p>Comes with its own boombox and eternal vibes. No refunds.</p>
+    <button class="buy-button" onclick="playSound()">BUY NOW</button>
+  </div>
+
+  <div class="product">
+    <img src="https://media.tenor.com/C7n4Bb6NZbYAAAAi/ghost-hamster.gif" alt="Ghost Hamster">
+    <h2>Ghost Hamster</h2>
+    <p>You can’t see him. Neither can we. But he’s there. Maybe.</p>
+    <button class="buy-button" onclick="playSound()">BUY NOW</button>
+  </div>
+
+  <div class="product">
+    <img src="https://media.tenor.com/UN6r5D1ROj4AAAAi/capybara.gif" alt="Capybara Deluxe">
+    <h2>Capybara Deluxe</h2>
+    <p>Chill level: Master. Vibes: Immaculate. Zen approved.</p>
+    <button class="buy-button" onclick="playSound()">BUY NOW</button>
+  </div>
+
+  <!-- Sound Effect -->
+  <audio id="buySound" src="click.mp3" preload="auto"></audio>
+
+  <script>
+    function playSound() {
+      const sound = document.getElementById('buySound');
+      sound.currentTime = 0; // reset sound if clicked quickly
+      sound.play();
+      alert("Your imaginary pet is on the way! (Not really)");
+    }
+  </script>
+
+  <footer>
+    © 2025 SillyZoo.biz · Not a real zoo. No real animals. Please don’t sue us. 🐒
+  </footer>
+
+</body>
+</html>
