@@ -10,14 +10,28 @@
       font-family: Arial, sans-serif;
       background-color: #121212;
       color: #fff;
+      animation: fadeIn 1s ease;
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     header {
       background: #00a651;
       padding: 15px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      animation: slideDown 1s ease;
     }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
     header h1 {
       margin: 0;
     }
@@ -28,6 +42,10 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .cart-button:hover {
+      background: #e5e5e5;
     }
     .container {
       display: flex;
@@ -46,6 +64,10 @@
       color: white;
       padding: 10px;
       cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .sidebar button:hover {
+      background: #007f3f;
     }
     .products {
       flex: 1;
@@ -61,7 +83,14 @@
       padding: 10px;
       width: 200px;
       text-align: center;
+      animation: popIn 0.5s ease;
     }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
     .product img {
       width: 100%;
       height: auto;
@@ -78,10 +107,18 @@
       display: none;
       flex-direction: column;
       overflow-y: auto;
+      box-shadow: -5px 0 10px rgba(0, 0, 0, 0.5);
     }
     .cart-overlay.active {
       display: flex;
+      animation: slideInRight 0.3s ease;
     }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
     .buy-now {
       margin-top: 20px;
       padding: 10px;
@@ -104,6 +141,7 @@
     }
     .payment-popup.active {
       display: block;
+      animation: fadeIn 0.5s ease;
     }
   </style>
 </head>
@@ -121,14 +159,42 @@
       <button>Exclusives</button>
     </div>
     <div class="products" id="product-list">
-      <!-- Sample Product -->
       <div class="product">
         <img src="images/kitsune.png" alt="Kitsune" />
         <h3>Kitsune</h3>
         <p>$49.99</p>
         <button onclick="addToCart('Kitsune', 49.99)">Add To Cart</button>
       </div>
-      <!-- Add more products similarly -->
+      <div class="product">
+        <img src="images/corrupted-kitsune.png" alt="Corrupted Kitsune" />
+        <h3>Corrupted Kitsune</h3>
+        <p>$8.99</p>
+        <button onclick="addToCart('Corrupted Kitsune', 8.99)">Add To Cart</button>
+      </div>
+      <div class="product">
+        <img src="images/disco-bee.png" alt="Disco Bee" />
+        <h3>Disco Bee</h3>
+        <p>$19.99</p>
+        <button onclick="addToCart('Disco Bee', 19.99)">Add To Cart</button>
+      </div>
+      <div class="product">
+        <img src="images/fennec-fox.png" alt="Fennec Fox" />
+        <h3>Fennec Fox</h3>
+        <p>$16.99</p>
+        <button onclick="addToCart('Fennec Fox', 16.99)">Add To Cart</button>
+      </div>
+      <div class="product">
+        <img src="images/moon-cat.png" alt="Moon Cat" />
+        <h3>Moon Cat</h3>
+        <p>$2.99</p>
+        <button onclick="addToCart('Moon Cat', 2.99)">Add To Cart</button>
+      </div>
+      <div class="product">
+        <img src="images/red-fox.png" alt="Red Fox" />
+        <h3>Red Fox</h3>
+        <p>$4.99</p>
+        <button onclick="addToCart('Red Fox', 4.99)">Add To Cart</button>
+      </div>
     </div>
   </div>
 
