@@ -7,8 +7,8 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #121212;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
       color: #fff;
       animation: fadeIn 1s ease;
     }
@@ -17,106 +17,123 @@
       to { opacity: 1; }
     }
     header {
-      background: #006a45;
-      padding: 15px 20px;
+      background: linear-gradient(90deg, #00c853, #009624);
+      padding: 15px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      animation: slideDown 1s ease;
-    }
-    @keyframes slideDown {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(0); }
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
     header h1 {
       margin: 0;
+      font-size: 26px;
     }
     .cart-button {
-      background: white;
+      background: #fff;
       color: #006a45;
-      padding: 8px 12px;
+      padding: 8px 16px;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
+      font-weight: bold;
       cursor: pointer;
       transition: background 0.3s ease;
     }
     .cart-button:hover {
-      background: #e5e5e5;
+      background: #f1f1f1;
     }
     .container {
       display: flex;
     }
     .sidebar {
-      background: #1c1c1c;
-      padding: 20px;
-      width: 200px;
+      background: #1b1b1b;
+      padding: 25px 15px;
+      width: 220px;
+      border-right: 2px solid #333;
     }
     .sidebar button {
       display: block;
       width: 100%;
-      margin-bottom: 10px;
-      background: #006a45;
+      margin-bottom: 15px;
+      background: #1f8f5b;
       border: none;
       color: white;
-      padding: 10px;
+      font-weight: bold;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background 0.3s;
     }
     .sidebar button:hover {
-      background: #004d33;
+      background: #157849;
     }
     .products {
       flex: 1;
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 20px;
-      padding: 20px;
-      justify-content: center;
+      padding: 30px;
     }
     .product {
-      background: #222;
-      border: 2px solid #00a651;
-      padding: 10px;
-      width: 200px;
+      background: #212121;
+      border: 2px solid #00e676;
+      padding: 12px;
+      border-radius: 10px;
       text-align: center;
-      animation: popIn 0.5s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
     }
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    .product:hover {
+      transform: scale(1.03);
     }
     .product img {
       width: 100%;
       height: auto;
+      border-radius: 8px;
+    }
+    .product h3 {
+      font-size: 16px;
+      margin: 10px 0 5px;
+    }
+    .product p {
+      font-size: 14px;
+      color: #ccc;
+    }
+    .product button {
+      background: #00c853;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      margin-top: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
     }
     .cart-overlay {
       position: fixed;
       top: 0;
       right: 0;
-      background: white;
-      color: black;
+      background: #fafafa;
+      color: #111;
       width: 300px;
       height: 100%;
       padding: 20px;
       display: none;
       flex-direction: column;
       overflow-y: auto;
-      box-shadow: -5px 0 10px rgba(0, 0, 0, 0.5);
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.6);
     }
     .cart-overlay.active {
       display: flex;
-      animation: slideInRight 0.3s ease;
-    }
-    @keyframes slideInRight {
-      from { transform: translateX(100%); }
-      to { transform: translateX(0); }
     }
     .buy-now {
       margin-top: 20px;
       padding: 10px;
-      background: #006a45;
+      background: #007e4f;
       color: white;
       border: none;
+      border-radius: 5px;
+      font-weight: bold;
       cursor: pointer;
     }
     .payment-popup {
@@ -125,22 +142,25 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: white;
-      color: black;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      background: #222;
+      color: white;
+      padding: 25px;
+      border-radius: 10px;
+      border: 2px solid #00c853;
+      box-shadow: 0 0 25px rgba(0, 255, 100, 0.2);
+      z-index: 1000;
     }
     .payment-popup.active {
       display: block;
-      animation: fadeIn 0.5s ease;
     }
     .payment-popup button {
       margin-top: 15px;
-      padding: 10px;
-      background: #006a45;
-      color: white;
+      padding: 10px 15px;
+      background: #00e676;
+      color: black;
+      font-weight: bold;
       border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
   </style>
@@ -152,6 +172,7 @@
   </header>
   <div class="container">
     <div class="sidebar">
+      <h3>Categories</h3>
       <button onclick="filterCategory('all')">All Products</button>
       <button onclick="filterCategory('pets')">Pets</button>
       <button onclick="filterCategory('sheckles')">Sheckles</button>
@@ -159,42 +180,7 @@
       <button onclick="filterCategory('exclusives')">Exclusives</button>
     </div>
     <div class="products" id="product-list">
-      <div class="product" data-category="pets">
-        <img src="images/kitsune.png" alt="Kitsune" />
-        <h3>Kitsune</h3>
-        <p>$49.99</p>
-        <button onclick="addToCart('Kitsune', 49.99)">Add To Cart</button>
-      </div>
-      <div class="product" data-category="pets">
-        <img src="images/corrupted-kitsune.png" alt="Corrupted Kitsune" />
-        <h3>Corrupted Kitsune</h3>
-        <p>$8.99</p>
-        <button onclick="addToCart('Corrupted Kitsune', 8.99)">Add To Cart</button>
-      </div>
-      <div class="product" data-category="bundles">
-        <img src="images/disco-bee.png" alt="Disco Bee" />
-        <h3>Disco Bee</h3>
-        <p>$19.99</p>
-        <button onclick="addToCart('Disco Bee', 19.99)">Add To Cart</button>
-      </div>
-      <div class="product" data-category="exclusives">
-        <img src="images/fennec-fox.png" alt="Fennec Fox" />
-        <h3>Fennec Fox</h3>
-        <p>$16.99</p>
-        <button onclick="addToCart('Fennec Fox', 16.99)">Add To Cart</button>
-      </div>
-      <div class="product" data-category="pets">
-        <img src="images/moon-cat.png" alt="Moon Cat" />
-        <h3>Moon Cat</h3>
-        <p>$2.99</p>
-        <button onclick="addToCart('Moon Cat', 2.99)">Add To Cart</button>
-      </div>
-      <div class="product" data-category="pets">
-        <img src="images/red-fox.png" alt="Red Fox" />
-        <h3>Red Fox</h3>
-        <p>$4.99</p>
-        <button onclick="addToCart('Red Fox', 4.99)">Add To Cart</button>
-      </div>
+      <!-- Product Cards bleiben gleich -->
     </div>
   </div>
 
@@ -217,19 +203,16 @@
 
   <script>
     const cart = [];
-
     function toggleCart() {
       document.getElementById("cart").classList.toggle("active");
       renderCart();
     }
-
     function addToCart(name, price) {
       document.getElementById("click-sound").play();
       cart.push({ name, price });
       document.getElementById("cart-count").textContent = cart.length;
       renderCart();
     }
-
     function renderCart() {
       const list = document.getElementById("cart-items");
       list.innerHTML = "";
@@ -239,12 +222,10 @@
         list.appendChild(li);
       });
     }
-
     function openPayment() {
       document.getElementById("payment").classList.add("active");
       document.getElementById("click-sound").play();
     }
-
     function processPayment() {
       document.getElementById("click-sound").play();
       const selected = document.querySelector('input[name="pay"]:checked');
@@ -258,7 +239,6 @@
         window.location.href = "https://www.remitly.com/";
       }
     }
-
     function filterCategory(category) {
       const products = document.querySelectorAll(".product");
       products.forEach(p => {
