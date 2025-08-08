@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Garden Mart</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
     body {
       margin: 0;
@@ -70,7 +71,7 @@
     .products {
       flex: 1;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Bigger product cards */
       gap: 30px;
       padding: 40px;
     }
@@ -110,6 +111,7 @@
       cursor: pointer;
       font-weight: bold;
     }
+    /* Cart */
     .cart-overlay {
       position: fixed;
       top: 0;
@@ -168,6 +170,7 @@
       cursor: pointer;
       box-shadow: 0 0 15px rgba(0,255,100,0.5);
     }
+    /* Payment Popup */
     .payment-popup {
       display: none;
       position: fixed;
@@ -181,6 +184,7 @@
       border: 2px solid #00c853;
       box-shadow: 0 0 25px rgba(0, 255, 100, 0.5);
       z-index: 1002;
+      max-width: 400px;
     }
     .payment-popup.active {
       display: block;
@@ -199,132 +203,170 @@
       background: #f44336;
       margin-top: 10px;
     }
+    .disclaimer {
+      background: red;
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Garden Mart</h1>
-    <button class="cart-button" onclick="toggleCart()">Cart (<span id="cart-count">0</span>)</button>
+    <h1>🌱 Garden Mart</h1>
+    <button class="cart-button" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
   </header>
+
   <div class="container">
-    <div class="sidebar">
-      <h3>Categories</h3>
-      <button onclick="filterCategory('all')">All Products</button>
-      <button onclick="filterCategory('pets')">Placeholder</button>
-      <button onclick="filterCategory('sheckles')">Placeholder</button>
-      <button onclick="filterCategory('bundles')">Placeholder</button>
-      <button onclick="filterCategory('exclusives')">Placeholder</button>
-    </div>
-    <div class="products" id="product-list">
-      <div class="product" data-category="pets">
-        <img src="images/kitsune.png" alt="Placeholder">
-        <h3>Placeholder</h3>
-        <p>$00.00</p>
-        <button onclick="addToCart('Placeholder', 49.99)">Add To Cart</button>
+    <!-- Sidebar Categories -->
+    <aside class="sidebar">
+      <button onclick="filterCategory('all')">All</button>
+      <button onclick="filterCategory('plants')">Plants</button>
+      <button onclick="filterCategory('tools')">Tools</button>
+      <button onclick="filterCategory('decor')">Decor</button>
+    </aside>
+
+    <!-- Products -->
+    <main class="products" id="product-list">
+      <!-- Example Products -->
+      <div class="product" data-category="plants">
+        <img src="https://via.placeholder.com/300x200.png?text=Rose" alt="Rose">
+        <h3>Rose Plant</h3>
+        <p>Beautiful fresh roses 🌹</p>
+        <p>$5</p>
+        <button onclick="addToCart('Rose Plant', 5)">Add to Cart</button>
       </div>
-      <div class="product" data-category="bundles">
-        <img src="images/kitsune_bundle.png" alt="Placeholder">
-        <h3>Placeholder</h3>
-        <p>$00.00</p>
-        <button onclick="addToCart('Placeholder', 50.99)">Add To Cart</button>
+      <div class="product" data-category="plants">
+        <img src="https://via.placeholder.com/300x200.png?text=Tulip" alt="Tulip">
+        <h3>Tulip Plant</h3>
+        <p>Bright colorful tulips 🌷</p>
+        <p>$4</p>
+        <button onclick="addToCart('Tulip Plant', 4)">Add to Cart</button>
       </div>
-      <div class="product" data-category="exclusives">
-        <img src="images/moon_cat.png" alt="Placeholder">
-        <h3>Placeholder</h3>
-        <p>$00.00</p>
-        <button onclick="addToCart('Placeholder', 2.99)">Add To Cart</button>
+      <div class="product" data-category="tools">
+        <img src="https://via.placeholder.com/300x200.png?text=Shovel" alt="Shovel">
+        <h3>Garden Shovel</h3>
+        <p>Strong and durable 🛠</p>
+        <p>$10</p>
+        <button onclick="addToCart('Garden Shovel', 10)">Add to Cart</button>
       </div>
-    </div>
+      <div class="product" data-category="decor">
+        <img src="https://via.placeholder.com/300x200.png?text=Fountain" alt="Fountain">
+        <h3>Garden Fountain</h3>
+        <p>Elegant water feature 💧</p>
+        <p>$35</p>
+        <button onclick="addToCart('Garden Fountain', 35)">Add to Cart</button>
+      </div>
+      <div class="product" data-category="tools">
+        <img src="https://via.placeholder.com/300x200.png?text=Watering+Can" alt="Watering Can">
+        <h3>Watering Can</h3>
+        <p>Stylish metal watering can 💦</p>
+        <p>$8</p>
+        <button onclick="addToCart('Watering Can', 8)">Add to Cart</button>
+      </div>
+    </main>
   </div>
 
+  <!-- Cart Overlay -->
   <div class="cart-overlay" id="cart">
-    <button class="close-btn" onclick="toggleCart()">Close</button>
+    <button class="close-btn" onclick="toggleCart()">X</button>
     <h2>Your Cart</h2>
     <ul id="cart-items"></ul>
+    <h3>Total: $<span id="cart-total">0</span></h3>
     <button class="buy-now" onclick="openPayment()">Buy Now</button>
   </div>
 
-  <div class="payment-popup" id="payment">
-    <h3>Select Payment Method</h3>
-    <ul>
-      <li><label><input type="radio" name="pay" value="paypal" /> PayPal</label></li>      
-    </ul>
-    <button onclick="processPayment()">Continue to Payment</button>
-    <button class="close-btn" onclick="closePayment()">Cancel</button>
+  <!-- Payment Popup -->
+  <div class="payment-popup" id="payment-popup">
+    <div class="disclaimer">⚠ WARNING: This is a test site. Do NOT enter real payment info!</div>
+    <h2>Checkout</h2>
+    <div id="checkout-details"></div>
+    <button onclick="processPayment()">Pay with PayPal</button>
+    <button class="close-btn" onclick="closePayment()">Close</button>
   </div>
-
-  <audio id="click-sound" src="click.mp3"></audio>
-
   <script>
-    function playClickSound() {
-      const sound = document.getElementById("click-sound").cloneNode();
-      sound.play();
+    let cart = [];
+    const clickSound = new Audio('click.mp3'); // Optional Sounddatei
+
+    function addToCart(product, price) {
+      clickSound.currentTime = 0;
+      clickSound.play();
+      cart.push({ product, price });
+      updateCartCount();
+      updateCartList();
     }
 
-    const cart = [];
+    function updateCartCount() {
+      document.getElementById('cart-count').innerText = cart.length;
+    }
+
+    function updateCartList() {
+      const cartItems = document.getElementById('cart-items');
+      cartItems.innerHTML = '';
+      cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${item.product} - $${item.price} 
+          <button onclick="removeFromCart(${index})">❌</button>`;
+        cartItems.appendChild(li);
+      });
+      updateCartTotal();
+    }
+
+    function updateCartTotal() {
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      document.getElementById('cart-total').innerText = total.toFixed(2);
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartCount();
+      updateCartList();
+    }
 
     function toggleCart() {
-      playClickSound();
-      document.getElementById("cart").classList.toggle("active");
-      renderCart();
+      const cartElement = document.getElementById('cart');
+      cartElement.classList.toggle('active');
     }
 
-    function addToCart(name, price) {
-      playClickSound();
-      cart.push({ name, price });
-      document.getElementById("cart-count").textContent = cart.length;
-      renderCart();
-    }
-
-    function removeItem(index) {
-      playClickSound();
-      cart.splice(index, 1);
-      document.getElementById("cart-count").textContent = cart.length;
-      renderCart();
-    }
-
-    function renderCart() {
-      const list = document.getElementById("cart-items");
-      list.innerHTML = "";
-      cart.forEach((item, index) => {
-        const li = document.createElement("li");
-        li.textContent = ${item.name} - $${item.price.toFixed(2)};
-        const btn = document.createElement("button");
-        btn.textContent = "Remove";
-        btn.onclick = () => removeItem(index);
-        li.appendChild(btn);
-        list.appendChild(li);
+    function filterCategory(category) {
+      const products = document.querySelectorAll('.product');
+      products.forEach(p => {
+        if (category === 'all' || p.dataset.category === category) {
+          p.style.display = 'block';
+        } else {
+          p.style.display = 'none';
+        }
       });
     }
 
     function openPayment() {
-      playClickSound();
-      document.getElementById("payment").classList.add("active");
+      document.getElementById('checkout-details').innerHTML =
+        cart.map((item, index) =>
+          `<div>${item.product} - $${item.price} 
+           <button onclick="removeFromCheckout(${index})">❌</button></div>`
+        ).join('');
+      document.getElementById('payment-popup').classList.add('active');
     }
 
     function closePayment() {
-      playClickSound();
-      document.getElementById("payment").classList.remove("active");
+      document.getElementById('payment-popup').classList.remove('active');
+    }
+
+    function removeFromCheckout(index) {
+      removeFromCart(index);
+      openPayment();
     }
 
     function processPayment() {
-      playClickSound();
-      const selected = document.querySelector('input[name="pay"]:checked');
-      if (!selected) {
-        alert("Please select a payment method.");
-        return;
-      }
-      if (selected.value === "paypal") {
-        window.location.href = "https://www.paypal.com/checkout";
-      } 
-        
-      function filterCategory(category) {
-      playClickSound();
-      const products = document.querySelectorAll(".product");
-      products.forEach(p => {
-        const cat = p.getAttribute("data-category");
-        p.style.display = (category === "all" || cat === category) ? "block" : "none";
-      });
+      alert('This is a demo payment. No real transaction occurred.');
+      cart = [];
+      updateCartCount();
+      updateCartList();
+      closePayment();
+      toggleCart();
     }
   </script>
 </body>
