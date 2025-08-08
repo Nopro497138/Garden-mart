@@ -247,8 +247,7 @@
   <div class="payment-popup" id="payment">
     <h3>Select Payment Method</h3>
     <ul>
-      <li><label><input type="radio" name="pay" value="paypal" /> PayPal</label></li>
-      <li><label><input type="radio" name="pay" value="remitly" /> Remitly</label></li>
+      <li><label><input type="radio" name="pay" value="paypal" /> PayPal</label></li>      
     </ul>
     <button onclick="processPayment()">Continue to Payment</button>
     <button class="close-btn" onclick="closePayment()">Cancel</button>
@@ -289,7 +288,7 @@
       list.innerHTML = "";
       cart.forEach((item, index) => {
         const li = document.createElement("li");
-        li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+        li.textContent = ${item.name} - $${item.price.toFixed(2)};
         const btn = document.createElement("button");
         btn.textContent = "Remove";
         btn.onclick = () => removeItem(index);
@@ -317,12 +316,9 @@
       }
       if (selected.value === "paypal") {
         window.location.href = "https://www.paypal.com/checkout";
-      } else if (selected.value === "remitly") {
-        window.location.href = "https://www.remitly.com/";
-      }
-    }
-
-    function filterCategory(category) {
+      } 
+        
+      function filterCategory(category) {
       playClickSound();
       const products = document.querySelectorAll(".product");
       products.forEach(p => {
