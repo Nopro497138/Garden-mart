@@ -1,201 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Garden Mart</title>
-  <link rel="icon" type="image/png" href="images/favicon.png" />
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #111;
-      color: #fff;
-      animation: fadeIn 1s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      margin:0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: white;
     }
     header {
-      background: linear-gradient(90deg, #00c853, #009624);
-      padding: 15px 30px;
+      background-color: #1f1f1f;
+      padding: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      border-bottom: 2px solid #333;
     }
     header h1 {
       margin: 0;
-      font-size: 26px;
+      font-size: 28px;
     }
     .cart-button {
-      background: #fff;
-      color: #006a45;
-      padding: 8px 16px;
+      background: #00e676;
+      color: #111;
       border: none;
-      border-radius: 5px;
+      padding: 10px 20px;
       font-weight: bold;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .cart-button:hover {
-      background: #f1f1f1;
     }
     .container {
       display: flex;
     }
     .sidebar {
-      background: #1b1b1b;
-      padding: 25px 15px;
-      width: 220px;
-      border-right: 2px solid #333;
+      width: 200px;
+      background: #1f1f1f;
+      padding: 20px;
     }
     .sidebar button {
-      display: block;
       width: 100%;
-      margin-bottom: 15px;
-      background: #1f8f5b;
+      padding: 10px;
+      background: #333;
       border: none;
       color: white;
-      font-weight: bold;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 15px;
+      margin-bottom: 10px;
       cursor: pointer;
-      transition: background 0.3s;
-    }
-    .sidebar button:hover {
-      background: #157849;
+      border-radius: 4px;
     }
     .products {
-      flex: 1;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 30px;
-      padding: 50px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      flex: 1;
     }
     .product {
-      background: #212121;
-      border: 2px solid #00e676;
-      padding: 30px;
-      border-radius: 16px;
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 8px;
       text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
     }
     .product:hover {
-      transform: scale(1.04);
-      box-shadow: 0 10px 30px rgba(0, 255, 100, 0.3);
+      transform: scale(1.05);
     }
     .product img {
       width: 100%;
-      height: auto;
-      border-radius: 12px;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 10px;
     }
     .product h3 {
-      font-size: 24px;
-      margin: 20px 0 10px;
-    }
-    .product p {
-      font-size: 18px;
-      color: #ccc;
-      margin-bottom: 12px;
+      margin: 10px 0;
     }
     .product button {
-      font-size: 17px;
-      padding: 12px 20px;
-      background-color: #00e676;
+      background: #00e676;
+      border: none;
+      padding: 8px 15px;
       color: #111;
       font-weight: bold;
-      border: none;
-      border-radius: 8px;
+      border-radius: 4px;
       cursor: pointer;
-      transition: background-color 0.2s;
     }
-    .product button:hover {
-      background-color: #00c763;
-    }
-
-    /* Cart Modal Styles */
     #cart-modal {
-      display:none;
-      position:fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      background:rgba(0,0,0,0.8);
-      justify-content:center;
-      align-items:center;
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
     .cart-content {
-      background:#222;
-      padding:30px;
-      border-radius:10px;
-      max-width:500px;
-      width:100%;
-      color:#fff;
-    }
-    .cart-item {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:10px;
-      background:#333;
-      padding:8px 12px;
-      border-radius:6px;
-    }
-    .remove-btn {
-      background:#444;
-      color:#ff4d4d;
-      border:none;
-      padding:5px 10px;
-      font-weight:bold;
-      font-size:14px;
-      border-radius:5px;
-      cursor:pointer;
-      transition:background 0.3s;
-    }
-    .remove-btn:hover {
-      background:#555;
+      background: #1f1f1f;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+      position: relative;
+      box-shadow: 0 0 15px #00e676;
     }
     .close-btn {
-      background:#ff4444;
-      border:none;
-      color:white;
-      padding:6px 10px;
-      border-radius:5px;
-      cursor:pointer;
-      float:right;
-      font-size:16px;
+      background: #333;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      float: right;
+      font-size: 16px;
     }
     .close-btn:hover {
-      background:#cc0000;
+      background: #555;
+    }
+    .remove-btn {
+      background: transparent;
+      border: none;
+      color: red;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 16px;
     }
     .checkout-btn {
-      background:#00e676;
-      color:#111;
-      padding:10px 20px;
-      font-weight:bold;
-      border:none;
-      border-radius:6px;
-      cursor:pointer;
-      margin-top:15px;
-      transition:background 0.2s;
+      background: #00e676;
+      color: #111;
+      padding: 10px 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 15px;
     }
     .checkout-btn:hover {
-      background:#00c763;
+      background: #00c763;
     }
     .cancel-btn {
-      background:#444;
-      color:#fff;
-      padding:10px 20px;
-      border:none;
-      border-radius:6px;
-      cursor:pointer;
-      margin-top:10px;
+      background: #444;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
     }
     .cancel-btn:hover {
-      background:#555;
+      background: #555;
     }
   </style>
 </head>
@@ -215,19 +172,19 @@
 
   <div class="products" id="product-list">
     <div class="product" data-category="plants">
-      <img src="images/plant1.jpg" alt="Plant 1">
+      <img src="images/plant1.jpg" alt="Green Plant">
       <h3>Green Plant</h3>
       <p>$10</p>
       <button onclick="addToCart('Green Plant', 10)">Add to Cart</button>
     </div>
     <div class="product" data-category="tools">
-      <img src="images/shovel.jpg" alt="Shovel">
+      <img src="images/shovel.jpg" alt="Garden Shovel">
       <h3>Garden Shovel</h3>
       <p>$15</p>
       <button onclick="addToCart('Garden Shovel', 15)">Add to Cart</button>
     </div>
     <div class="product" data-category="plants">
-      <img src="images/flower.jpg" alt="Flower">
+      <img src="images/flower.jpg" alt="Colorful Flower">
       <h3>Colorful Flower</h3>
       <p>$8</p>
       <button onclick="addToCart('Colorful Flower', 8)">Add to Cart</button>
@@ -241,13 +198,7 @@
     <h2>Your Cart</h2>
     <div id="cart-items"></div>
     <p id="total-price">Total: $0</p>
-    <label>
-      Payment Method:
-      <select id="payment-method">
-        <option value="paypal">PayPal</option>
-      </select>
-    </label>
-    <br>
+    <p><strong>Payment Method:</strong> PayPal</p>
     <button class="checkout-btn" onclick="checkout()">Buy Now</button>
     <button class="cancel-btn" onclick="clearCart()">Cancel</button>
   </div>
@@ -258,17 +209,13 @@
   function filterCategory(category) {
     const products = document.querySelectorAll('.product');
     products.forEach(p => {
-      if (category === 'all' || p.dataset.category === category) {
-        p.style.display = 'block';
-      } else {
-        p.style.display = 'none';
-      }
+      p.style.display = (category === 'all' || p.dataset.category === category) ? 'block' : 'none';
     });
   }
 
   function addToCart(name, price) {
     cart.push({name, price});
-    alert(name + " added to cart!");
+    renderCart();
   }
 
   function openCart() {
@@ -308,10 +255,8 @@
   }
 
   function checkout() {
-    const payment = document.getElementById('payment-method').value;
-    if (payment === 'paypal') {
-      window.location.href = "https://paypal.me/Mananquil19";
-    }
+    if (cart.length === 0) return;
+    window.location.href = "https://paypal.me/Mananquil19";
   }
 </script>
 
