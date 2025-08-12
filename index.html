@@ -6,189 +6,134 @@
   <title>Garden Mart</title>
   <link rel="icon" type="image/png" href="images/favicon.png" />
   <style>
-    /* --- Styles copied from your old code --- */
-    body {
-      margin: 0;
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #111;
-      color: #fff;
-      animation: fadeIn 1s ease;
+      color:#fff;
+      background:#021004;
+      overflow-x:hidden;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+
+    /* ===== Star Canvas + Green Nebula ===== */
+    #star-canvas{position:fixed;inset:0;z-index:0}
+    .nebula{
+      position:fixed;inset:0;z-index:0;pointer-events:none;
+      background:
+        radial-gradient(800px 500px at 10% 20%, rgba(0,255,120,0.14), transparent 10%),
+        radial-gradient(900px 500px at 80% 70%, rgba(0,180,100,0.08), transparent 8%),
+        radial-gradient(600px 350px at 50% 40%, rgba(80,255,180,0.06), transparent 6%);
+      filter: blur(40px) saturate(1.05);
+      opacity:0.95; mix-blend-mode: screen;
+      animation: nebMove 26s linear infinite, nebRotate 60s linear infinite;
     }
-    header {
-      background: linear-gradient(90deg, #00c853, #009624);
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    @keyframes nebMove { 0%{transform:translateY(0)}50%{transform:translateY(-40px)}100%{transform:translateY(0)} }
+    @keyframes nebRotate { 0%{transform:rotate(0deg)}100%{transform:rotate(360deg)} }
+
+    .gloss { position:fixed;inset:0;z-index:0;pointer-events:none; background:
+      linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0));
+      mix-blend-mode: overlay; opacity:0.6;
     }
-    header h1 {
-      margin: 0;
-      font-size: 26px;
+
+    /* ===== Header ===== */
+    header{
+      position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;
+      padding:20px 36px;
+      background:linear-gradient(90deg, rgba(0,255,120,0.08), rgba(0,180,80,0.04));
+      backdrop-filter: blur(6px);
+      border-bottom:1px solid rgba(255,255,255,0.05);
     }
-    .cart-button {
-      background: #fff;
-      color: #006a45;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease;
+    header h1{
+      font-size:32px;letter-spacing:1px;color:#caffdd;
+      text-shadow:0 0 18px rgba(100,255,160,0.12)
     }
-    .cart-button:hover {
-      background: #f1f1f1;
+    .cart-button{
+      background:linear-gradient(90deg,#fff,#f4fff6);
+      color:#007a4d;
+      border:none; padding:10px 20px; border-radius:14px;
+      font-weight:900; cursor:pointer; font-size:18px;
+      box-shadow:0 12px 36px rgba(0,150,80,0.08);
+      transition: transform .18s ease, box-shadow .18s ease;
     }
-    .container {
-      display: flex;
+    .cart-button:hover{ transform:translateY(-4px); box-shadow:0 22px 48px rgba(0,150,80,0.12) }
+
+    /* ===== Layout ===== */
+    .container{position:relative;z-index:2;display:flex;gap:28px;max-width:1400px;margin:20px auto;padding:0 28px 100px}
+    .sidebar{
+      width:240px;
+      background:linear-gradient(180deg, rgba(0,40,20,0.7), rgba(0,20,10,0.65));
+      padding:20px;border-radius:16px;
+      border:1px solid rgba(0,255,150,0.12);
+      box-shadow:0 28px 80px rgba(0,40,20,0.6);
+      backdrop-filter: blur(6px);
     }
-    .sidebar {
-      background: #1b1b1b;
-      padding: 25px 15px;
-      width: 220px;
-      border-right: 2px solid #333;
+    .sidebar button{
+      display:block;width:100%;margin-bottom:14px;padding:14px;border-radius:14px;border:none;
+      background:linear-gradient(90deg,#00ff88,#00b46d);
+      color:#012b16;font-weight:900;font-size:16px;cursor:pointer;
+      box-shadow:0 12px 36px rgba(0,150,80,0.12);
+      transition: transform .14s, box-shadow .14s;
     }
-    .sidebar button {
-      display: block;
-      width: 100%;
-      margin-bottom: 15px;
-      background: #1f8f5b;
-      border: none;
-      color: white;
-      font-weight: bold;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background 0.3s;
+    .sidebar button:hover{ transform:translateY(-6px); box-shadow:0 18px 46px rgba(0,150,80,0.16) }
+
+    /* ===== Products Grid ===== */
+    .products{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px;align-content:start}
+    .product{
+      background:linear-gradient(180deg, rgba(4,40,20,0.9), rgba(2,20,10,0.88));
+      border-radius:18px;padding:20px;
+      border:1px solid rgba(0,255,150,0.10);
+      box-shadow:0 28px 90px rgba(0,0,0,0.75);
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s;
     }
-    .sidebar button:hover {
-      background: #157849;
+    .product:hover{ transform:translateY(-10px) scale(1.02); box-shadow:0 40px 120px rgba(0,255,160,0.18); filter:brightness(1.02) }
+    .product img{width:100%;height:240px;object-fit:cover;border-radius:14px;margin-bottom:14px;background:linear-gradient(180deg,#222,#111)}
+    .product h3{font-size:22px;margin-bottom:8px}
+    .product p{font-size:18px;color:#d6ffec;margin-bottom:12px;font-weight:800}
+    .product button{
+      width:100%;padding:14px;border-radius:14px;border:none;
+      background:linear-gradient(90deg,#00ff88,#00b46d);
+      color:#012b16;font-weight:900;font-size:18px;cursor:pointer;
+      transition:transform .12s;
     }
-    .products {
-      flex: 1;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 30px;
-      padding: 50px;
+    .product button:hover{transform:translateY(-5px)}
+
+    /* ===== Modal ===== */
+    .modal{position:fixed;inset:0;z-index:12;display:none;align-items:center;justify-content:center;
+      background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.9));padding:26px}
+    .modal-content{
+      width:400px;background:linear-gradient(180deg, rgba(0,40,20,0.96), rgba(0,20,10,0.98));
+      border-radius:16px;padding:20px;
+      border:1px solid rgba(0,255,150,0.12);
+      box-shadow:0 36px 120px rgba(0,0,0,0.9);
     }
-    .product {
-      background: #212121;
-      border: 2px solid #00e676;
-      padding: 30px;
-      border-radius: 16px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
-      transition: transform 0.2s, box-shadow 0.2s;
+    .modal h2{color:#d6ffe7;margin-bottom:10px;text-align:center}
+    .checkout-item{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:10px
     }
-    .product:hover {
-      transform: scale(1.04);
-      box-shadow: 0 10px 30px rgba(0, 255, 100, 0.3);
+    .remove-btn{background:none;color:#ff7d7d;border:none;font-size:18px;cursor:pointer}
+    .checkout-footer{display:flex;justify-content:center;gap:12px;margin-top:18px}
+    .buy-btn{
+      padding:10px 20px;background:linear-gradient(90deg,#00ff88,#00b46d);
+      color:#012b16;font-weight:900;border:none;border-radius:8px;cursor:pointer;
     }
-    .product img {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
+    .buy-btn:hover{background:linear-gradient(90deg,#00e67a,#009f5f)}
+    .cancel-btn{
+      padding:10px 20px;background:#444;color:white;border:none;border-radius:8px;cursor:pointer;
     }
-    .product h3 {
-      font-size: 24px;
-      margin: 20px 0 10px;
-    }
-    .product p {
-      font-size: 18px;
-      color: #ccc;
-      margin-bottom: 12px;
-    }
-    .product button {
-      font-size: 17px;
-      padding: 12px 20px;
-      background-color: #00e676;
-      color: #111;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    .product button:hover {
-      background-color: #00c763;
-    }
-    /* Checkout modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.7);
-    }
-    .modal-content {
-      background-color: #1e1e1e;
-      margin: 10% auto;
-      padding: 25px;
-      border: 2px solid #00e676;
-      width: 400px;
-      border-radius: 12px;
-      box-shadow: 0 0 25px #00ff99;
-    }
-    .modal h2 {
-      margin-top: 0;
-      text-align: center;
-    }
-    .checkout-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #2a2a2a;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-    }
-    .remove-btn {
-      background: none;
-      color: #ff4d4d;
-      border: none;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    .checkout-footer {
-      margin-top: 20px;
-      text-align: center;
-    }
-    .buy-btn {
-      padding: 10px 20px;
-      background: #00e676;
-      color: #111;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-    .buy-btn:hover {
-      background: #00c763;
-    }
-    .cancel-btn {
-      padding: 10px 20px;
-      background: #444;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .cancel-btn:hover {
-      background: #666;
-    }
+    .cancel-btn:hover{background:#666}
+
+    /* Cart badge */
+    #cart-count{display:inline-block;padding:2px 8px;border-radius:999px;background:linear-gradient(90deg,#d6ffeb,#9effce);color:#01301c;font-weight:900;margin-left:6px}
   </style>
 </head>
 <body>
+  <!-- Canvas & Nebula -->
+  <canvas id="star-canvas"></canvas>
+  <div class="nebula" aria-hidden="true"></div>
+  <div class="gloss" aria-hidden="true"></div>
+
   <header>
     <h1>Garden Mart</h1>
     <button class="cart-button" onclick="openCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
@@ -210,7 +155,7 @@
     <div class="modal-content">
       <h2>Checkout</h2>
       <div id="cart-items"></div>
-      <p>Payment Method: PayPal</p>
+      <p style="text-align:center;color:#ccc;">Payment Method: PayPal</p>
       <div class="checkout-footer">
         <button class="buy-btn" onclick="buyItems()">Buy</button>
         <button class="cancel-btn" onclick="closeCart()">Close</button>
@@ -221,18 +166,61 @@
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
   <script>
-    // Products are loaded from products.json
+    /* === Star background animation === */
+    const canvas = document.getElementById('star-canvas');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = innerWidth, H = canvas.height = innerHeight;
+    window.addEventListener('resize', ()=>{ W = canvas.width = innerWidth; H = canvas.height = innerHeight; initStars(); });
+    function rand(a,b){ return Math.random()*(b-a)+a; }
+    let stars = [];
+    const STAR_COUNT = Math.floor((window.innerWidth*window.innerHeight)/28000) + 90;
+    function initStars(){
+      stars = [];
+      for(let i=0;i<STAR_COUNT;i++){
+        stars.push({
+          x: Math.random()*W,
+          y: Math.random()*H,
+          z: rand(0.2,1.2),
+          r: rand(0.3,1.9),
+          dx: rand(-0.04,0.04),
+          dy: rand(-0.03,0.03),
+          tw: Math.random()*1.8
+        });
+      }
+    }
+    initStars();
+    let t=0;
+    function drawStars(){
+      ctx.clearRect(0,0,W,H);
+      const g = ctx.createLinearGradient(0,0,W,H);
+      g.addColorStop(0,'rgba(120,255,200,0.01)');
+      g.addColorStop(1,'rgba(0,200,120,0.01)');
+      ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+      for(const s of stars){
+        const tw = Math.sin(t*0.02*s.tw)*0.7 + 0.8;
+        const size = s.r * tw * s.z;
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${0.55 * s.z * tw})`;
+        ctx.arc(s.x,s.y,Math.max(0.2,size),0,Math.PI*2); ctx.fill();
+        s.x += s.dx*(1+0.6*s.z);
+        s.y += s.dy*(1+0.6*s.z);
+        if(s.x < -10) s.x = W+10; if(s.x > W+10) s.x = -10;
+        if(s.y < -10) s.y = H+10; if(s.y > H+10) s.y = -10;
+      }
+      t++; requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    /* === Your original script (unchanged) === */
     let productsData = [];
     let cart = [];
-
     function playClick() {
       const audio = document.getElementById("click-sound");
       if (audio && audio.play) {
         audio.currentTime = 0;
-        audio.play().catch(() => { /* ignore play errors (autoplay policies) */ });
+        audio.play().catch(() => {});
       }
     }
-
     function showProducts(filter) {
       const container = document.getElementById("products");
       container.innerHTML = "";
@@ -240,7 +228,6 @@
       filtered.forEach(product => {
         const el = document.createElement("div");
         el.classList.add("product");
-        // format price if it's a number, otherwise show as-is
         const price = (typeof product.price === "number") ? product.price.toFixed(2) : product.price;
         el.innerHTML = `
           <img src="${product.image}" alt="${product.name}">
@@ -251,12 +238,10 @@
         container.appendChild(el);
       });
     }
-
     function showCategory(cat) {
       playClick();
       showProducts(cat);
     }
-
     function addToCart(id) {
       const product = productsData.find(p => p.id === id);
       if (product) {
@@ -264,7 +249,6 @@
         document.getElementById("cart-count").textContent = cart.length;
       }
     }
-
     function openCart() {
       playClick();
       const cartItems = document.getElementById("cart-items");
@@ -282,37 +266,30 @@
           cartItems.appendChild(div);
         });
       }
-      document.getElementById("cart-modal").style.display = "block";
+      document.getElementById("cart-modal").style.display = "flex";
     }
-
     function closeCart() {
       playClick();
       document.getElementById("cart-modal").style.display = "none";
     }
-
     function removeItem(index) {
       playClick();
       cart.splice(index, 1);
       document.getElementById("cart-count").textContent = cart.length;
       openCart();
     }
-
     function buyItems() {
       playClick();
       if (cart.length > 0) {
-        // Redirect to PayPal (same as in your original code)
         window.location.href = "https://paypal.me/Mananquil19";
       }
     }
-
-    // Load products from products.json and show initial 'all'
     fetch('products.json')
       .then(response => {
         if (!response.ok) throw new Error('Could not load products.json');
         return response.json();
       })
       .then(data => {
-        // Support both an array and an object with a "products" array
         productsData = Array.isArray(data) ? data : (data.products || []);
         showProducts('all');
       })
