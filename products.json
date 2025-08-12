@@ -124,12 +124,6 @@
     "price": "10.00",
     "category": "bundles",
     "image": "images/Rainbow.png"
-  },
-  {
-    "id": 19,
-    "name": "Test",
-    "price": "$5.00",
-    "category": "pets",
-    "image": "https://cdn.discordapp.com/attachments/1403410462074470431/1404813894811389952/Screenshot_20250812-210800.png?ex=689c8e64&is=689b3ce4&hm=596ae5f080afdff0e1e5b1c42656af495c741a7f5c015dea4b246363315c50c2&"
   }
+
 ]
