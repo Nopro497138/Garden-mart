@@ -6,156 +6,185 @@
   <title>Garden Mart</title>
   <link rel="icon" type="image/png" href="images/favicon.png" />
   <style>
+    /* --- Styles copied from your old code --- */
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      background-color: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+      color: #fff;
+      animation: fadeIn 1s ease;
     }
-
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
     header {
-      background-color: #4CAF50;
-      color: white;
-      padding: 1rem;
+      background: linear-gradient(90deg, #00c853, #009624);
+      padding: 15px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
-
     header h1 {
       margin: 0;
-      font-size: 1.5rem;
+      font-size: 26px;
     }
-
     .cart-button {
-      background-color: white;
-      color: #4CAF50;
+      background: #fff;
+      color: #006a45;
+      padding: 8px 16px;
       border: none;
-      padding: 0.5rem 1rem;
       border-radius: 5px;
-      cursor: pointer;
       font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
-
+    .cart-button:hover {
+      background: #f1f1f1;
+    }
     .container {
       display: flex;
     }
-
     .sidebar {
-      width: 200px;
-      background-color: #fff;
-      padding: 1rem;
-      border-right: 1px solid #ccc;
+      background: #1b1b1b;
+      padding: 25px 15px;
+      width: 220px;
+      border-right: 2px solid #333;
     }
-
     .sidebar button {
+      display: block;
       width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      background-color: #f0f0f0;
+      margin-bottom: 15px;
+      background: #1f8f5b;
       border: none;
+      color: white;
+      font-weight: bold;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
       cursor: pointer;
-      border-radius: 5px;
+      transition: background 0.3s;
     }
-
     .sidebar button:hover {
-      background-color: #ddd;
+      background: #157849;
     }
-
     .products {
       flex: 1;
-      padding: 1rem;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 30px;
+      padding: 50px;
     }
-
     .product {
-      background-color: white;
-      border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: #212121;
+      border: 2px solid #00e676;
+      padding: 30px;
+      border-radius: 16px;
       text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-
+    .product:hover {
+      transform: scale(1.04);
+      box-shadow: 0 10px 30px rgba(0, 255, 100, 0.3);
+    }
     .product img {
-      max-width: 100%;
-      border-radius: 10px;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
     }
-
     .product h3 {
-      margin: 0.5rem 0;
+      font-size: 24px;
+      margin: 20px 0 10px;
     }
-
     .product p {
-      font-weight: bold;
-      color: #4CAF50;
+      font-size: 18px;
+      color: #ccc;
+      margin-bottom: 12px;
     }
-
     .product button {
-      background-color: #4CAF50;
-      color: white;
+      font-size: 17px;
+      padding: 12px 20px;
+      background-color: #00e676;
+      color: #111;
+      font-weight: bold;
       border: none;
-      padding: 0.5rem 1rem;
+      border-radius: 8px;
       cursor: pointer;
-      border-radius: 5px;
+      transition: background-color 0.2s;
     }
-
-    /* Modal Styling */
+    .product button:hover {
+      background-color: #00c763;
+    }
+    /* Checkout modal */
     .modal {
       display: none;
       position: fixed;
-      z-index: 1000;
-      padding-top: 100px;
+      z-index: 10;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.4);
+      background-color: rgba(0,0,0,0.7);
     }
-
     .modal-content {
-      background-color: white;
-      margin: auto;
-      padding: 20px;
-      border-radius: 10px;
-      width: 300px;
+      background-color: #1e1e1e;
+      margin: 10% auto;
+      padding: 25px;
+      border: 2px solid #00e676;
+      width: 400px;
+      border-radius: 12px;
+      box-shadow: 0 0 25px #00ff99;
     }
-
+    .modal h2 {
+      margin-top: 0;
+      text-align: center;
+    }
     .checkout-item {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      background: #2a2a2a;
+      padding: 10px;
       margin-bottom: 10px;
+      border-radius: 6px;
     }
-
     .remove-btn {
       background: none;
+      color: #ff4d4d;
       border: none;
-      color: red;
-      font-size: 1rem;
+      font-size: 18px;
       cursor: pointer;
     }
-
+    .checkout-footer {
+      margin-top: 20px;
+      text-align: center;
+    }
     .buy-btn {
-      background-color: #4CAF50;
+      padding: 10px 20px;
+      background: #00e676;
+      color: #111;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .buy-btn:hover {
+      background: #00c763;
+    }
+    .cancel-btn {
+      padding: 10px 20px;
+      background: #444;
       color: white;
       border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
     }
-
-    .cancel-btn {
-      background-color: #ccc;
-      color: black;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
+    .cancel-btn:hover {
+      background: #666;
     }
   </style>
 </head>
@@ -164,6 +193,7 @@
     <h1>Garden Mart</h1>
     <button class="cart-button" onclick="openCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
   </header>
+
   <div class="container">
     <div class="sidebar">
       <button onclick="showCategory('all')">All Products</button>
@@ -171,6 +201,7 @@
       <button onclick="showCategory('sheckles')">Sheckles</button>
       <button onclick="showCategory('bundles')">Bundles</button>
     </div>
+
     <div class="products" id="products"></div>
   </div>
 
@@ -190,34 +221,31 @@
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
   <script>
+    // Products are loaded from products.json
     let productsData = [];
     let cart = [];
 
     function playClick() {
-      document.getElementById("click-sound").play();
-    }
-
-    function loadProducts() {
-      fetch("products.json")
-        .then(res => res.json())
-        .then(data => {
-          productsData = data;
-          showProducts("all");
-        })
-        .catch(err => console.error("Error loading products:", err));
+      const audio = document.getElementById("click-sound");
+      if (audio && audio.play) {
+        audio.currentTime = 0;
+        audio.play().catch(() => { /* ignore play errors (autoplay policies) */ });
+      }
     }
 
     function showProducts(filter) {
       const container = document.getElementById("products");
       container.innerHTML = "";
-      const filtered = filter === "all" ? productsData : productsData.filter(p => p.category === filter);
+      const filtered = (filter === "all" || !filter) ? productsData : productsData.filter(p => p.category === filter);
       filtered.forEach(product => {
         const el = document.createElement("div");
         el.classList.add("product");
+        // format price if it's a number, otherwise show as-is
+        const price = (typeof product.price === "number") ? product.price.toFixed(2) : product.price;
         el.innerHTML = `
           <img src="${product.image}" alt="${product.name}">
           <h3>${product.name}</h3>
-          <p>$${product.price}</p>
+          <p>$${price}</p>
           <button onclick="addToCart(${product.id}); playClick()">Add to Cart</button>
         `;
         container.appendChild(el);
@@ -241,15 +269,19 @@
       playClick();
       const cartItems = document.getElementById("cart-items");
       cartItems.innerHTML = "";
-      cart.forEach((item, index) => {
-        const div = document.createElement("div");
-        div.classList.add("checkout-item");
-        div.innerHTML = `
-          <span>${item.name} - $${item.price}</span>
-          <button class="remove-btn" onclick="removeItem(${index})">❌</button>
-        `;
-        cartItems.appendChild(div);
-      });
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="text-align:center;color:#ccc;">Your cart is empty.</p>';
+      } else {
+        cart.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.classList.add("checkout-item");
+          div.innerHTML = `
+            <span>${item.name} - $${(typeof item.price === "number") ? item.price.toFixed(2) : item.price}</span>
+            <button class="remove-btn" onclick="removeItem(${index})">❌</button>
+          `;
+          cartItems.appendChild(div);
+        });
+      }
       document.getElementById("cart-modal").style.display = "block";
     }
 
@@ -268,12 +300,27 @@
     function buyItems() {
       playClick();
       if (cart.length > 0) {
+        // Redirect to PayPal (same as in your original code)
         window.location.href = "https://paypal.me/Mananquil19";
       }
     }
 
-    // Load products on page load
-    window.onload = loadProducts;
+    // Load products from products.json and show initial 'all'
+    fetch('products.json')
+      .then(response => {
+        if (!response.ok) throw new Error('Could not load products.json');
+        return response.json();
+      })
+      .then(data => {
+        // Support both an array and an object with a "products" array
+        productsData = Array.isArray(data) ? data : (data.products || []);
+        showProducts('all');
+      })
+      .catch(err => {
+        console.error(err);
+        const container = document.getElementById("products");
+        container.innerHTML = '<p style="color:#f55; padding:30px;">Products could not be loaded. Check products.json.</p>';
+      });
   </script>
 </body>
 </html>
