@@ -1,0 +1,20 @@
+[
+  { "id": 1, "name": "1.8Q Sheckles", "price": "2.00", "category": "sheckles", "image": "images/rose.png" },
+  { "id": 2, "name": "Disco bee", "price": "8.00", "category": "pets", "image": "images/bee.png" },
+  { "id": 3, "name": "Butter fly", "price": "6.00", "category": "pets", "image": "images/butter.png" },
+  { "id": 4, "name": "Raccoon", "price": "8.00", "category": "pets", "image": "images/raccoon.png" },
+  { "id": 5, "name": "Mimic Octopus", "price": "5.00", "category": "pets", "image": "images/mimic.png" },
+  { "id": 6, "name": "Queen bee", "price": "8.00", "category": "pets", "image": "images/queen.png" },
+  { "id": 7, "name": "Dragonfly", "price": "5.00", "category": "pets", "image": "images/dragonfly.png" },
+  { "id": 8, "name": "Chicken Zombie", "price": "2.50", "category": "pets", "image": "images/zombie.png" },
+  { "id": 9, "name": "Kitsune", "price": "25.00", "category": "pets", "image": "images/kitsune.png" },
+  { "id": 10, "name": "T-rex", "price": "5.00", "category": "pets", "image": "images/trex.png" },
+  { "id": 11, "name": "Spinosaurus", "price": "5.00", "category": "pets", "image": "images/spino.png" },
+  { "id": 12, "name": "French fry Ferret", "price": "5.00", "category": "pets", "image": "images/french.png" },
+  { "id": 13, "name": "Fennec fox", "price": "5.00", "category": "pets", "image": "images/fennec.png" },
+  { "id": 14, "name": "Corrupted Kitsune", "price": "5.00", "category": "pets", "image": "images/corrupted.png" },
+  { "id": 15, "name": "Kitsune gang", "price": "28.00", "category": "bundles", "image": "images/gang.png" },
+  { "id": 16, "name": "Stealers", "price": "31.00", "category": "bundles", "image": "images/stealers.png" },
+  { "id": 17, "name": "GOATED Combo", "price": "12.00", "category": "bundles", "image": "images/goated.png" },
+  { "id": 18, "name": "Rainbow-gold combo", "price": "10.00", "category": "bundles", "image": "images/Rainbow.png" }
+]
