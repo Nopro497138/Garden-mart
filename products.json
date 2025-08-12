@@ -124,6 +124,12 @@
     "price": "10.00",
     "category": "bundles",
     "image": "images/Rainbow.png"
+  },
+  {
+    "id": 19,
+    "name": "test",
+    "price": "5.00",
+    "category": "bundles",
+    "image": "images/test_1755011702.jpg"
   }
-
 ]
