@@ -17,11 +17,10 @@ PRODUCTS_FILE = os.getenv("PRODUCTS_FILE", "products.json")  # relative path use
 ALLOWED_ROLE_IDS_RAW = os.getenv("ALLOWED_ROLE_IDS", "")  # comma-separated role ids
 # GitHub auto-commit settings (optional)
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITHUB_OWNER = os.getenv("GITHUB_OWNER")  # e.g. "Nopro497138"
-GITHUB_REPO = os.getenv("GITHUB_REPO")    # e.g. "Garden-mart"
+GITHUB_OWNER = os.getenv("GITHUB_OWNER")
+GITHUB_REPO = os.getenv("GITHUB_REPO")
 GITHUB_BRANCH = os.getenv("GITHUB_BRANCH", "main")
 
-# parse allowed role ids into a set of ints
 def parse_allowed_roles(raw: str):
     try:
         return {int(x.strip()) for x in raw.split(",") if x.strip()}
@@ -30,7 +29,9 @@ def parse_allowed_roles(raw: str):
 
 ALLOWED_ROLE_IDS = parse_allowed_roles(ALLOWED_ROLE_IDS_RAW)
 
+# Discord intents
 intents = discord.Intents.default()
+intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # --- JSON helpers ---
@@ -41,12 +42,10 @@ def load_products(path=PRODUCTS_FILE):
     except FileNotFoundError:
         return []
     except json.JSONDecodeError:
-        # bad JSON -> return empty to avoid crashing, but log
         print(f"Error: products file {path} contains invalid JSON.")
         return []
 
 def save_products_atomic(products, path=PRODUCTS_FILE):
-    # write to a temp file and replace (atomic)
     data = json.dumps(products, ensure_ascii=False, indent=2)
     dirpath = os.path.dirname(path) or "."
     fd, tmp = tempfile.mkstemp(dir=dirpath, text=True)
@@ -55,7 +54,6 @@ def save_products_atomic(products, path=PRODUCTS_FILE):
             f.write(data)
         os.replace(tmp, path)
     except Exception as e:
-        # cleanup
         try:
             os.remove(tmp)
         except Exception:
@@ -67,12 +65,8 @@ def next_id(products):
         return 1
     return max((p.get("id", 0) for p in products)) + 1
 
-# --- GitHub file update (optional) ---
+# --- GitHub helpers (optional) ---
 def github_update_file(owner, repo, path, content_bytes, message, branch="main", token=None):
-    """
-    Update a file in the given GitHub repo using the Contents API.
-    Returns (True, response_json) on success, (False, error_message) on failure.
-    """
     if not token:
         return False, "No GitHub token provided."
 
@@ -82,18 +76,13 @@ def github_update_file(owner, repo, path, content_bytes, message, branch="main",
         "Accept": "application/vnd.github+json"
     }
 
-    # 1) get current file to obtain sha (if exists)
     get_resp = requests.get(api_url, headers=headers, params={"ref": branch})
     sha = None
     if get_resp.status_code == 200:
-        try:
-            sha = get_resp.json().get("sha")
-        except Exception:
-            pass
+        sha = get_resp.json().get("sha")
     elif get_resp.status_code not in (404,):
         return False, f"GitHub GET returned {get_resp.status_code}: {get_resp.text}"
 
-    # prepare body
     b64content = base64.b64encode(content_bytes).decode()
     payload = {
         "message": message,
@@ -109,21 +98,18 @@ def github_update_file(owner, repo, path, content_bytes, message, branch="main",
     else:
         return False, f"GitHub PUT returned {put_resp.status_code}: {put_resp.text}"
 
-# --- Role check helpers ---
+# --- Permission check ---
 def _member_has_allowed_role(member: discord.Member, allowed_ids: set[int]) -> bool:
     if not member:
         return False
     return any(role.id in allowed_ids for role in member.roles)
 
 def has_allowed_role_env(interaction: discord.Interaction) -> bool:
-    # If ALLOWED_ROLE_IDS is empty, treat as no-one allowed.
     if not ALLOWED_ROLE_IDS:
         return False
-
     member = interaction.user if isinstance(interaction.user, discord.Member) else None
     if not member and interaction.guild:
         member = interaction.guild.get_member(interaction.user.id)
-
     return _member_has_allowed_role(member, ALLOWED_ROLE_IDS)
 
 def is_allowed(interaction: discord.Interaction) -> bool:
@@ -131,27 +117,33 @@ def is_allowed(interaction: discord.Interaction) -> bool:
         return True
     raise app_commands.CheckFailure("You don't have permission to use this command.")
 
-# Friendly error handler for app commands
+# Friendly error handler for permission issues and others
 @bot.event
 async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
     try:
         if isinstance(error, app_commands.CheckFailure):
             if not interaction.response.is_done():
-                await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+                await interaction.response.send_message(embed=discord.Embed(
+                    title="❌ Permission denied",
+                    description="You don't have permission to use this command.",
+                    color=discord.Color.red()
+                ), ephemeral=True)
             return
     except Exception:
         pass
 
-    # generic fallback
     try:
         if not interaction.response.is_done():
-            await interaction.response.send_message("An error occurred while running the command.", ephemeral=True)
+            await interaction.response.send_message(embed=discord.Embed(
+                title="⚠️ Error",
+                description="An error occurred while executing the command.",
+                color=discord.Color.dark_red()
+            ), ephemeral=True)
     except Exception:
         pass
-    # re-raise so it appears in logs
     raise error
 
-# --- Bot events ---
+# --- on_ready ---
 @bot.event
 async def on_ready():
     print(f"Bot is logged in as {bot.user}")
@@ -160,14 +152,14 @@ async def on_ready():
             guild = discord.Object(id=int(GUILD_ID))
             bot.tree.copy_global_to(guild=guild)
             await bot.tree.sync(guild=guild)
-            print("Commands synced instantly with Guild ID.")
+            print("Commands synced with guild.")
         else:
             await bot.tree.sync()
-            print("Global commands synced (can take up to 1h).")
+            print("Global commands synced.")
     except Exception as e:
         print(f"Sync error: {e}")
 
-# --- Commands (protected) ---
+# --- /product_add with category autocomplete ---
 @app_commands.check(is_allowed)
 @bot.tree.command(name="product_add", description="Add a new product to the store")
 @app_commands.describe(name="Product name", price="Price", category="Category", image="Image URL or path")
@@ -183,15 +175,17 @@ async def product_add(interaction: discord.Interaction, name: str, price: str, c
     }
     products.append(new_product)
 
-    # save locally
     try:
         save_products_atomic(products, PRODUCTS_FILE)
     except Exception as e:
-        print(f"Failed to save products locally: {e}")
-        await interaction.response.send_message("❌ Failed to save product locally.", ephemeral=True)
+        await interaction.response.send_message(embed=discord.Embed(
+            title="❌ Save failed",
+            description="Failed to save product locally.",
+            color=discord.Color.red()
+        ), ephemeral=True)
+        print(f"Failed to save products: {e}")
         return
 
-    # if configured, try to push to GitHub
     github_result = None
     if GITHUB_TOKEN and GITHUB_OWNER and GITHUB_REPO:
         try:
@@ -210,14 +204,12 @@ async def product_add(interaction: discord.Interaction, name: str, price: str, c
         except Exception as e:
             github_result = (False, str(e))
 
-    # prepare embed reply
     embed = discord.Embed(title="✅ Product Added", description=f"**{name}** has been added to the store.", color=discord.Color.green())
-    embed.add_field(name="ID", value=str(new_id))
-    embed.add_field(name="Price", value=f"${price}")
-    embed.add_field(name="Category", value=category)
+    embed.add_field(name="ID", value=str(new_id), inline=True)
+    embed.add_field(name="Price", value=f"${price}", inline=True)
+    embed.add_field(name="Category", value=category, inline=True)
     embed.set_thumbnail(url=image)
 
-    # include GitHub info if available
     if github_result:
         ok, info = github_result
         if ok:
@@ -226,73 +218,146 @@ async def product_add(interaction: discord.Interaction, name: str, price: str, c
             embed.add_field(name="GitHub", value=f"⚠️ Failed to push: {info}", inline=False)
 
     await interaction.response.send_message(embed=embed, ephemeral=True)
+
+# Autocomplete for category: suggest existing categories from products.json
+@product_add.autocomplete("category")
+async def category_autocomplete(interaction: discord.Interaction, current: str):
+    products = load_products()
+    categories = sorted({str(p.get("category", "")).strip() for p in products if p.get("category")})
+    # filter by current typed text
+    suggestions = [c for c in categories if current.lower() in c.lower()]
+    # limit to 25 choices
+    choices = [app_commands.Choice(name=c, value=c) for c in suggestions[:25]]
+    # if no categories exist, offer some defaults
+    if not choices:
+        defaults = ["pets", "sheckles", "bundles", "misc"]
+        choices = [app_commands.Choice(name=d, value=d) for d in defaults if current.lower() in d.lower()][:25]
+    return choices
+
+# --- /product_remove via Select menu ---
+class ProductRemoveSelect(discord.ui.Select):
+    def __init__(self, products_list):
+        # products_list: list of dicts
+        options = []
+        for p in products_list:
+            # label must be <= 100 chars
+            label = f"{p.get('name', 'Unnamed')}"
+            if len(label) > 100:
+                label = label[:97] + "..."
+            price = p.get("price", "")
+            cat = p.get("category", "")
+            description = f"${price} • {cat}"[:100]  # description <=100 chars
+            options.append(discord.SelectOption(label=label, value=str(p.get("id")), description=description))
+        super().__init__(placeholder="Select a product to remove...", min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        product_id = int(self.values[0])
+        products = load_products()
+        product_to_remove = next((p for p in products if p.get("id") == product_id), None)
+        if not product_to_remove:
+            await interaction.response.edit_message(embed=discord.Embed(
+                title="❌ Not found",
+                description="The selected product could not be found.",
+                color=discord.Color.red()
+            ), view=None)
+            return
+
+        new_products = [p for p in products if p.get("id") != product_id]
+        try:
+            save_products_atomic(new_products, PRODUCTS_FILE)
+        except Exception as e:
+            await interaction.response.edit_message(embed=discord.Embed(
+                title="❌ Delete failed",
+                description="Failed to remove product locally.",
+                color=discord.Color.red()
+            ), view=None)
+            print(f"Failed to save products after delete: {e}")
+            return
+
+        github_result = None
+        if GITHUB_TOKEN and GITHUB_OWNER and GITHUB_REPO:
+            try:
+                with open(PRODUCTS_FILE, "rb") as f:
+                    content_bytes = f.read()
+                ok, resp = github_update_file(
+                    GITHUB_OWNER,
+                    GITHUB_REPO,
+                    os.path.basename(PRODUCTS_FILE),
+                    content_bytes,
+                    message=f"Remove product {product_id} via bot",
+                    branch=GITHUB_BRANCH,
+                    token=GITHUB_TOKEN
+                )
+                github_result = (ok, resp)
+            except Exception as e:
+                github_result = (False, str(e))
+
+        embed = discord.Embed(title="🗑 Product Removed", description=f"**{product_to_remove.get('name')}** has been removed.", color=discord.Color.orange())
+        embed.add_field(name="ID", value=str(product_id), inline=True)
+        embed.add_field(name="Category", value=str(product_to_remove.get("category")), inline=True)
+        embed.set_thumbnail(url=product_to_remove.get("image"))
+
+        if github_result:
+            ok, info = github_result
+            if ok:
+                embed.add_field(name="GitHub", value="✅ Pushed to repository", inline=False)
+            else:
+                embed.add_field(name="GitHub", value=f"⚠️ Failed to push: {info}", inline=False)
+
+        # Edit the original ephemeral message to show result and remove view
+        await interaction.response.edit_message(embed=embed, view=None)
+
+class ProductRemoveView(discord.ui.View):
+    def __init__(self, products_list, timeout=120):
+        super().__init__(timeout=timeout)
+        self.add_item(ProductRemoveSelect(products_list))
 
 @app_commands.check(is_allowed)
-@bot.tree.command(name="product_remove", description="Remove a product by its ID")
-@app_commands.describe(product_id="ID of the product to remove")
-async def product_remove(interaction: discord.Interaction, product_id: int):
+@bot.tree.command(name="product_remove", description="Remove a product by selecting it from a list")
+async def product_remove(interaction: discord.Interaction):
     products = load_products()
-    product_to_remove = next((p for p in products if p.get("id") == product_id), None)
-
-    if not product_to_remove:
-        await interaction.response.send_message(embed=discord.Embed(title="❌ Product Not Found", description=f"No product with ID `{product_id}` exists.", color=discord.Color.red()), ephemeral=True)
+    if not products:
+        await interaction.response.send_message(embed=discord.Embed(
+            title="📭 No Products",
+            description="The store is currently empty.",
+            color=discord.Color.red()
+        ), ephemeral=True)
         return
 
-    new_products = [p for p in products if p.get("id") != product_id]
+    # prepare list sorted by id; keep at most 25 items for the select menu
+    sorted_products = sorted(products, key=lambda x: x.get("id", 0))
+    limited = sorted_products[:25]
+    if len(sorted_products) > 25:
+        note = "\n\n⚠️ Only the first 25 products are shown. If you need to delete others, use `/product_list` and remove by ID."
+    else:
+        note = ""
 
-    try:
-        save_products_atomic(new_products, PRODUCTS_FILE)
-    except Exception as e:
-        print(f"Failed to save products locally: {e}")
-        await interaction.response.send_message("❌ Failed to remove product locally.", ephemeral=True)
-        return
+    embed = discord.Embed(title="🗑 Remove Product", description=f"Select a product to remove from the list below.{note}", color=discord.Color.orange())
+    # add short list for context
+    for p in limited:
+        embed.add_field(name=f"{p.get('id')}: {p.get('name')}", value=f"💰 ${p.get('price')} • 🏷 {p.get('category')}", inline=False)
 
-    github_result = None
-    if GITHUB_TOKEN and GITHUB_OWNER and GITHUB_REPO:
-        try:
-            with open(PRODUCTS_FILE, "rb") as f:
-                content_bytes = f.read()
-            ok, resp = github_update_file(
-                GITHUB_OWNER,
-                GITHUB_REPO,
-                os.path.basename(PRODUCTS_FILE),
-                content_bytes,
-                message=f"Remove product {product_id} via bot",
-                branch=GITHUB_BRANCH,
-                token=GITHUB_TOKEN
-            )
-            github_result = (ok, resp)
-        except Exception as e:
-            github_result = (False, str(e))
+    view = ProductRemoveView(limited)
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
-    embed = discord.Embed(title="🗑 Product Removed", description=f"**{product_to_remove['name']}** has been removed.", color=discord.Color.orange())
-    embed.add_field(name="ID", value=str(product_id))
-    embed.set_thumbnail(url=product_to_remove.get("image"))
-
-    if github_result:
-        ok, info = github_result
-        if ok:
-            embed.add_field(name="GitHub", value="✅ Pushed to repository", inline=False)
-        else:
-            embed.add_field(name="GitHub", value=f"⚠️ Failed to push: {info}", inline=False)
-
-    await interaction.response.send_message(embed=embed, ephemeral=True)
-
+# --- /product_list remains similar, returns an embed ---
 @app_commands.check(is_allowed)
 @bot.tree.command(name="product_list", description="List all products in the store")
 async def product_list(interaction: discord.Interaction):
     products = load_products()
-
     if not products:
-        embed = discord.Embed(title="📭 No Products", description="The store is currently empty.", color=discord.Color.red())
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.send_message(embed=discord.Embed(
+            title="📭 No Products",
+            description="The store is currently empty.",
+            color=discord.Color.red()
+        ), ephemeral=True)
         return
 
     embed = discord.Embed(title="🛒 Product List", description="Here are the current products:", color=discord.Color.blue())
     for p in products:
-        embed.add_field(name=f"{p['id']}: {p['name']}", value=f"💰 ${p['price']} | 🏷 {p['category']}", inline=False)
+        embed.add_field(name=f"{p.get('id')}: {p.get('name')}", value=f"💰 ${p.get('price')} | 🏷 {p.get('category')}", inline=False)
 
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
-# run the bot
+# Run the bot
 bot.run(os.getenv("DISCORD_TOKEN"))
