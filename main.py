@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-GUILD_ID = os.getenv("1378007406365380628")  # Optional, for instant command sync
+# Put your guild id in the env as GUILD_ID if you need instant command sync for that guild.
+GUILD_ID = os.getenv("GUILD_ID")  # e.g. "1378007406365380628"
 PRODUCTS_FILE = os.getenv("PRODUCTS_FILE", "products.json")
 
 intents = discord.Intents.default()
@@ -30,6 +31,63 @@ def next_id(products):
         return 1
     return max((p.get("id", 0) for p in products)) + 1
 
+# --- Permission check for allowed roles ---
+def _member_has_allowed_role(member: discord.Member, allowed_ids: set[int]) -> bool:
+    if not member:
+        return False
+    return any(role.id in allowed_ids for role in member.roles)
+
+def has_allowed_role_env(interaction: discord.Interaction) -> bool:
+    """
+    Reads ALLOWED_ROLE_IDS from env (comma separated role IDs).
+    Returns True if the invoking user has at least one of those roles.
+    """
+    allowed_raw = os.getenv("ALLOWED_ROLE_IDS", "")
+    if not allowed_raw:
+        return False
+    try:
+        allowed_ids = {int(x.strip()) for x in allowed_raw.split(",") if x.strip()}
+    except ValueError:
+        # env is malformed
+        return False
+
+    # interaction.user is normally a Member in guild context
+    member = interaction.user if isinstance(interaction.user, discord.Member) else None
+
+    # fallback: try to get member from guild
+    if not member and interaction.guild:
+        member = interaction.guild.get_member(interaction.user.id)
+
+    return _member_has_allowed_role(member, allowed_ids)
+
+def is_allowed(interaction: discord.Interaction) -> bool:
+    if has_allowed_role_env(interaction):
+        return True
+    raise app_commands.CheckFailure("You don't have permission to use this command.")
+
+# Optional: global error handler for app commands (friendly reply for permission issues)
+@bot.event
+async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
+    # Only respond if the interaction hasn't been responded to yet
+    try:
+        if isinstance(error, app_commands.CheckFailure):
+            # ephemeral so only the invoker sees it
+            if not interaction.response.is_done():
+                await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+            return
+    except Exception:
+        # ignore response errors
+        pass
+
+    # For other errors, you may want to log and send a generic message
+    try:
+        if not interaction.response.is_done():
+            await interaction.response.send_message("An error occurred while running the command.", ephemeral=True)
+    except Exception:
+        pass
+    # re-raise to log full stack in console if needed
+    raise error
+
 # --- Bot Events ---
 @bot.event
 async def on_ready():
@@ -46,7 +104,8 @@ async def on_ready():
     except Exception as e:
         print(f"Sync error: {e}")
 
-# --- Commands ---
+# --- Commands (restricted by @app_commands.check(is_allowed)) ---
+@app_commands.check(is_allowed)
 @bot.tree.command(name="product_add", description="Add a new product to the store")
 @app_commands.describe(name="Product name", price="Price", category="Category", image="Image URL or path")
 async def product_add(interaction: discord.Interaction, name: str, price: str, category: str, image: str):
@@ -74,6 +133,7 @@ async def product_add(interaction: discord.Interaction, name: str, price: str, c
 
     await interaction.response.send_message(embed=embed)
 
+@app_commands.check(is_allowed)
 @bot.tree.command(name="product_remove", description="Remove a product by its ID")
 @app_commands.describe(product_id="ID of the product to remove")
 async def product_remove(interaction: discord.Interaction, product_id: int):
@@ -98,10 +158,11 @@ async def product_remove(interaction: discord.Interaction, product_id: int):
         color=discord.Color.orange()
     )
     embed.add_field(name="ID", value=str(product_id))
-    embed.set_thumbnail(url=product_to_remove["image"])
+    embed.set_thumbnail(url=product_to_remove.get("image"))
 
     await interaction.response.send_message(embed=embed)
 
+@app_commands.check(is_allowed)
 @bot.tree.command(name="product_list", description="List all products in the store")
 async def product_list(interaction: discord.Interaction):
     products = load_products()
@@ -130,4 +191,5 @@ async def product_list(interaction: discord.Interaction):
 
     await interaction.response.send_message(embed=embed)
 
+# Run the bot
 bot.run(os.getenv("DISCORD_TOKEN"))
