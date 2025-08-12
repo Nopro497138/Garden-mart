@@ -1,4 +1,3 @@
-# main.py
 import json
 import os
 import tempfile
@@ -344,9 +343,130 @@ async def category_autocomplete(interaction: discord.Interaction, current: str):
         choices = [app_commands.Choice(name=d, value=d) for d in defaults if current.lower() in d.lower()][:25]
     return choices
 
-# --- product_remove and product_list unchanged (kept minimal here) ---
-# ... (reuse the product_remove/product_list implementation you already have)
-# For brevity I'm not repeating them here; keep your existing remove/list commands.
+# --- /product_remove via Select menu ---
+class ProductRemoveSelect(discord.ui.Select):
+    def __init__(self, products_list):
+        # products_list: list of dicts
+        options = []
+        for p in products_list:
+            label = f"{p.get('name', 'Unnamed')}"
+            if len(label) > 100:
+                label = label[:97] + "..."
+            price = p.get("price", "")
+            cat = p.get("category", "")
+            description = f"${price} • {cat}"[:100]  # description <=100 chars
+            options.append(discord.SelectOption(label=label, value=str(p.get("id")), description=description))
+        super().__init__(placeholder="Select a product to remove...", min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        product_id = int(self.values[0])
+        products = load_products()
+        product_to_remove = next((p for p in products if p.get("id") == product_id), None)
+        if not product_to_remove:
+            await interaction.response.edit_message(embed=discord.Embed(
+                title="❌ Not found",
+                description="The selected product could not be found.",
+                color=discord.Color.red()
+            ), view=None)
+            return
+
+        new_products = [p for p in products if p.get("id") != product_id]
+        try:
+            save_products_atomic(new_products, PRODUCTS_FILE)
+        except Exception as e:
+            await interaction.response.edit_message(embed=discord.Embed(
+                title="❌ Delete failed",
+                description="Failed to remove product locally.",
+                color=discord.Color.red()
+            ), view=None)
+            print(f"Failed to save products after delete: {e}")
+            return
+
+        # attempt to remove or update on GitHub by uploading new products.json
+        github_result = None
+        if GITHUB_TOKEN and GITHUB_OWNER and GITHUB_REPO:
+            try:
+                with open(PRODUCTS_FILE, "rb") as f:
+                    content_bytes = f.read()
+                ok, resp = github_update_file(
+                    GITHUB_OWNER,
+                    GITHUB_REPO,
+                    os.path.basename(PRODUCTS_FILE),
+                    content_bytes,
+                    message=f"Remove product {product_id} via bot",
+                    branch=GITHUB_BRANCH,
+                    token=GITHUB_TOKEN
+                )
+                github_result = (ok, resp)
+            except Exception as e:
+                github_result = (False, str(e))
+
+        embed = discord.Embed(title="🗑 Product Removed", description=f"**{product_to_remove.get('name')}** has been removed.", color=discord.Color.orange())
+        embed.add_field(name="ID", value=str(product_id), inline=True)
+        embed.add_field(name="Category", value=str(product_to_remove.get("category")), inline=True)
+        embed.set_thumbnail(url=product_to_remove.get("image"))
+
+        if github_result:
+            ok, info = github_result
+            if ok:
+                embed.add_field(name="GitHub", value="✅ Pushed to repository", inline=False)
+            else:
+                embed.add_field(name="GitHub", value=f"⚠️ Failed to push: {info}", inline=False)
+
+        # Edit the original ephemeral message to show result and remove view
+        await interaction.response.edit_message(embed=embed, view=None)
+
+class ProductRemoveView(discord.ui.View):
+    def __init__(self, products_list, timeout=120):
+        super().__init__(timeout=timeout)
+        self.add_item(ProductRemoveSelect(products_list))
+
+@app_commands.check(is_allowed)
+@bot.tree.command(name="product_remove", description="Remove a product by selecting it from a list")
+async def product_remove(interaction: discord.Interaction):
+    products = load_products()
+    if not products:
+        await interaction.response.send_message(embed=discord.Embed(
+            title="📭 No Products",
+            description="The store is currently empty.",
+            color=discord.Color.red()
+        ), ephemeral=True)
+        return
+
+    # prepare list sorted by id; keep at most 25 items for the select menu
+    sorted_products = sorted(products, key=lambda x: x.get("id", 0))
+    limited = sorted_products[:25]
+    if len(sorted_products) > 25:
+        note = "\n\n⚠️ Only the first 25 products are shown. If you need to delete others, use `/product_list` and remove by ID."
+    else:
+        note = ""
+
+    embed = discord.Embed(title="🗑 Remove Product", description=f"Select a product to remove from the list below.{note}", color=discord.Color.orange())
+    # add short list for context
+    for p in limited:
+        embed.add_field(name=f"{p.get('id')}: {p.get('name')}", value=f"💰 ${p.get('price')} • 🏷 {p.get('category')}", inline=False)
+
+    view = ProductRemoveView(limited)
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+
+# --- /product_list ---
+@app_commands.check(is_allowed)
+@bot.tree.command(name="product_list", description="List all products in the store")
+async def product_list(interaction: discord.Interaction):
+    products = load_products()
+    if not products:
+        await interaction.response.send_message(embed=discord.Embed(
+            title="📭 No Products",
+            description="The store is currently empty.",
+            color=discord.Color.red()
+        ), ephemeral=True)
+        return
+
+    embed = discord.Embed(title="🛒 Product List", description="Here are the current products:", color=discord.Color.blue())
+    for p in products:
+        embed.add_field(name=f"{p.get('id')}: {p.get('name')}", value=f"💰 ${p.get('price')} | 🏷 {p.get('category')}", inline=False)
+
+    await interaction.response.send_message(embed=embed, ephemeral=True)
 
 # Run the bot
 bot.run(os.getenv("DISCORD_TOKEN"))
