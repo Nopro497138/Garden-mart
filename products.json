@@ -124,12 +124,5 @@
     "price": "10.00",
     "category": "bundles",
     "image": "images/Rainbow.png"
-  },
-  {
-    "id": 19,
-    "name": "Test",
-    "price": "5.00",
-    "category": "pets",
-    "image": "images/Test_1755093533.png"
   }
 ]
