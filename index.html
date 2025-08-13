@@ -1,353 +1,303 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Responsive Produktseite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Garden Mart</title>
+  <link rel="icon" type="image/png" href="images/favicon.png" />
   <style>
-    /* Hintergrundbild */
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
-      background-size: cover;
-      color: #333;
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color:#fff;
+      background:#021004;
+      overflow-x:hidden;
     }
 
-    header {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+    /* ===== Star Canvas + Green Nebula ===== */
+    #star-canvas{position:fixed;inset:0;z-index:0}
+    .nebula{
+      position:fixed;inset:0;z-index:0;pointer-events:none;
+      background:
+        radial-gradient(800px 500px at 10% 20%, rgba(0,255,120,0.14), transparent 10%),
+        radial-gradient(900px 500px at 80% 70%, rgba(0,180,100,0.08), transparent 8%),
+        radial-gradient(600px 350px at 50% 40%, rgba(80,255,180,0.06), transparent 6%);
+      filter: blur(40px) saturate(1.05);
+      opacity:0.95; mix-blend-mode: screen;
+      animation: nebMove 26s linear infinite, nebRotate 60s linear infinite;
+    }
+    @keyframes nebMove { 0%{transform:translateY(0)}50%{transform:translateY(-40px)}100%{transform:translateY(0)} }
+    @keyframes nebRotate { 0%{transform:rotate(0deg)}100%{transform:rotate(360deg)} }
+
+    .gloss { position:fixed;inset:0;z-index:0;pointer-events:none; background:
+      linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0));
+      mix-blend-mode: overlay; opacity:0.6;
     }
 
-    header h1 {
-      margin: 0;
-      font-weight: 700;
-      font-size: 28px;
-      color: #222;
+    /* ===== Header ===== */
+    header{
+      position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;
+      padding:20px 36px;
+      background:linear-gradient(90deg, rgba(0,255,120,0.08), rgba(0,180,80,0.04));
+      backdrop-filter: blur(6px);
+      border-bottom:1px solid rgba(255,255,255,0.05);
     }
+    header h1{
+      font-size:32px;letter-spacing:1px;color:#caffdd;
+      text-shadow:0 0 18px rgba(100,255,160,0.12)
+    }
+    .cart-button{
+      background:linear-gradient(90deg,#fff,#f4fff6);
+      color:#007a4d;
+      border:none; padding:10px 20px; border-radius:14px;
+      font-weight:900; cursor:pointer; font-size:18px;
+      box-shadow:0 12px 36px rgba(0,150,80,0.08);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .cart-button:hover{ transform:translateY(-4px); box-shadow:0 22px 48px rgba(0,150,80,0.12) }
 
-    .cart-button {
-      background-color: #3a86ff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 16px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 18px;
-      transition: background-color 0.3s ease;
+    /* ===== Layout ===== */
+    .container{position:relative;z-index:2;display:flex;gap:28px;max-width:1400px;margin:20px auto;padding:0 28px 100px}
+    .sidebar{
+      width:240px;
+      background:linear-gradient(180deg, rgba(0,40,20,0.7), rgba(0,20,10,0.65));
+      padding:20px;border-radius:16px;
+      border:1px solid rgba(0,255,150,0.12);
+      box-shadow:0 28px 80px rgba(0,40,20,0.6);
+      backdrop-filter: blur(6px);
     }
-    .cart-button:hover {
-      background-color: #265dff;
+    .sidebar button{
+      display:block;width:100%;margin-bottom:14px;padding:14px;border-radius:14px;border:none;
+      background:linear-gradient(90deg,#00ff88,#00b46d);
+      color:#012b16;font-weight:900;font-size:16px;cursor:pointer;
+      box-shadow:0 12px 36px rgba(0,150,80,0.12);
+      transition: transform .14s, box-shadow .14s;
     }
+    .sidebar button:hover{ transform:translateY(-6px); box-shadow:0 18px 46px rgba(0,150,80,0.16) }
 
-    .container {
-      max-width: 1200px;
-      margin: 40px auto 60px;
-      padding: 0 40px;
-      display: flex;
-      gap: 30px;
+    /* ===== Products Grid ===== */
+    .products{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px;align-content:start}
+    .product{
+      background:linear-gradient(180deg, rgba(4,40,20,0.9), rgba(2,20,10,0.88));
+      border-radius:18px;padding:20px;
+      border:1px solid rgba(0,255,150,0.10);
+      box-shadow:0 28px 90px rgba(0,0,0,0.75);
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s;
     }
+    .product:hover{ transform:translateY(-10px) scale(1.02); box-shadow:0 40px 120px rgba(0,255,160,0.18); filter:brightness(1.02) }
+    .product img{width:100%;height:240px;object-fit:cover;border-radius:14px;margin-bottom:14px;background:linear-gradient(180deg,#222,#111)}
+    .product h3{font-size:22px;margin-bottom:8px}
+    .product p{font-size:18px;color:#d6ffec;margin-bottom:12px;font-weight:800}
+    .product button{
+      width:100%;padding:14px;border-radius:14px;border:none;
+      background:linear-gradient(90deg,#00ff88,#00b46d);
+      color:#012b16;font-weight:900;font-size:18px;cursor:pointer;
+      transition:transform .12s;
+    }
+    .product button:hover{transform:translateY(-5px)}
 
-    /* Sidebar */
-    .sidebar {
-      flex: 0 0 200px;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.08);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+    /* ===== Modal ===== */
+    .modal{position:fixed;inset:0;z-index:12;display:none;align-items:center;justify-content:center;
+      background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.9));padding:26px}
+    .modal-content{
+      width:400px;background:linear-gradient(180deg, rgba(0,40,20,0.96), rgba(0,20,10,0.98));
+      border-radius:16px;padding:20px;
+      border:1px solid rgba(0,255,150,0.12);
+      box-shadow:0 36px 120px rgba(0,0,0,0.9);
     }
+    .modal h2{color:#d6ffe7;margin-bottom:10px;text-align:center}
+    .checkout-item{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:10px
+    }
+    .remove-btn{background:none;color:#ff7d7d;border:none;font-size:18px;cursor:pointer}
+    .checkout-footer{display:flex;justify-content:center;gap:12px;margin-top:18px}
+    .buy-btn{
+      padding:10px 20px;background:linear-gradient(90deg,#00ff88,#00b46d);
+      color:#012b16;font-weight:900;border:none;border-radius:8px;cursor:pointer;
+    }
+    .buy-btn:hover{background:linear-gradient(90deg,#00e67a,#009f5f)}
+    .cancel-btn{
+      padding:10px 20px;background:#444;color:white;border:none;border-radius:8px;cursor:pointer;
+    }
+    .cancel-btn:hover{background:#666}
 
-    .sidebar button {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      transition: background-color 0.3s ease;
-      text-align: left;
-      color: #3a86ff;
-    }
-    .sidebar button:hover,
-    .sidebar button.active {
-      background-color: #3a86ff;
-      color: white;
-    }
-
-    /* Produkte */
-    .products {
-      flex: 1;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-
-    .product {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 24px;
-      box-shadow: 0 6px 20px rgba(58, 134, 255, 0.25);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      transition: box-shadow 0.3s ease;
-    }
-    .product:hover {
-      box-shadow: 0 12px 32px rgba(58, 134, 255, 0.35);
-    }
-
-    .product img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 24px;
-      margin-bottom: 18px;
-      box-shadow: 0 0 14px rgba(58, 134, 255, 0.35);
-    }
-
-    .product h3 {
-      font-weight: 700;
-      font-size: 20px;
-      margin: 8px 0;
-      color: #222;
-    }
-
-    .product p {
-      font-weight: 600;
-      font-size: 16px;
-      margin: 6px 0 20px;
-      color: #555;
-    }
-
-    .product button {
-      padding: 14px 24px;
-      font-size: 16px;
-      font-weight: 700;
-      color: white;
-      background-color: #3a86ff;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      width: 100%;
-    }
-    .product button:hover {
-      background-color: #265dff;
-    }
-
-    /* Modal */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0,0,0,0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 50;
-      padding: 20px;
-    }
-    .modal-content {
-      background: white;
-      border-radius: 28px;
-      padding: 24px 36px;
-      max-width: 480px;
-      width: 100%;
-      box-shadow: 0 16px 48px rgba(58, 134, 255, 0.3);
-      text-align: center;
-    }
-    .modal-content h2 {
-      margin-top: 0;
-      font-size: 28px;
-      color: #3a86ff;
-    }
-    .modal-content p {
-      font-size: 18px;
-      margin: 20px 0;
-      color: #444;
-    }
-    .modal-close {
-      margin-top: 24px;
-      padding: 12px 32px;
-      font-size: 18px;
-      font-weight: 700;
-      background-color: #3a86ff;
-      color: white;
-      border: none;
-      border-radius: 24px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .modal-close:hover {
-      background-color: #265dff;
-    }
-
-    /* Responsive Anpassungen */
-    @media (max-width: 1024px) {
-      .container {
-        flex-direction: column;
-        padding: 0 20px 60px;
-      }
-      .sidebar {
-        width: 100%;
-        margin-bottom: 20px;
-        display: flex;
-        gap: 12px;
-        overflow-x: auto;
-        padding: 10px;
-        border-radius: 12px;
-      }
-      .sidebar button {
-        flex: 1 0 auto;
-        font-size: 14px;
-        padding: 12px;
-        border-radius: 10px;
-      }
-      .products {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 16px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      header {
-        padding: 16px 24px;
-      }
-      header h1 {
-        font-size: 24px;
-      }
-      .cart-button {
-        font-size: 16px;
-        padding: 8px 16px;
-      }
-      .container {
-        padding: 0 12px 40px;
-      }
-      .products {
-        grid-template-columns: 1fr;
-        gap: 14px;
-      }
-      .product img {
-        height: 180px;
-      }
-      .product h3 {
-        font-size: 18px;
-      }
-      .product p {
-        font-size: 16px;
-      }
-      .product button {
-        font-size: 16px;
-        padding: 12px;
-      }
-      .sidebar button {
-        font-size: 13px;
-        padding: 10px;
-      }
-      .modal-content {
-        width: 90vw;
-        padding: 16px;
-      }
-    }
+    /* Cart badge */
+    #cart-count{display:inline-block;padding:2px 8px;border-radius:999px;background:linear-gradient(90deg,#d6ffeb,#9effce);color:#01301c;font-weight:900;margin-left:6px}
   </style>
 </head>
 <body>
-  <header>
-    <h1>Produkte</h1>
-    <button class="cart-button">Warenkorb (0)</button>
-  </header>
-  <main class="container">
-    <aside class="sidebar">
-      <button class="active">Alle</button>
-      <button>Elektronik</button>
-      <button>Kleidung</button>
-      <button>Haushalt</button>
-    </aside>
-    <section class="products">
-      <article class="product">
-        <img src="https://images.unsplash.com/photo-1510557880182-3d4d3c5c55ef?auto=format&fit=crop&w=400&q=80" alt="Smartphone" />
-        <h3>Smartphone</h3>
-        <p>499,99 €</p>
-        <button>In den Warenkorb</button>
-      </article>
-      <article class="product">
-        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=400&q=80" alt="T-Shirt" />
-        <h3>T-Shirt</h3>
-        <p>19,99 €</p>
-        <button>In den Warenkorb</button>
-      </article>
-      <article class="product">
-        <img src="https://images.unsplash.com/photo-1560184897-75f785354f8d?auto=format&fit=crop&w=400&q=80" alt="Mixer" />
-        <h3>Mixer</h3>
-        <p>89,99 €</p>
-        <button>In den Warenkorb</button>
-      </article>
-      <article class="product">
-        <img src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=400&q=80" alt="Kopfhörer" />
-        <h3>Kopfhörer</h3>
-        <p>129,99 €</p>
-        <button>In den Warenkorb</button>
-      </article>
-      <article class="product">
-        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=400&q=80" alt="Hose" />
-        <h3>Hose</h3>
-        <p>39,99 €</p>
-        <button>In den Warenkorb</button>
-      </article>
-    </section>
-  </main>
+  <!-- Canvas & Nebula -->
+  <canvas id="star-canvas"></canvas>
+  <div class="nebula" aria-hidden="true"></div>
+  <div class="gloss" aria-hidden="true"></div>
 
-  <div class="modal" id="modal">
+  <header>
+    <h1>Garden Mart</h1>
+    <button class="cart-button" onclick="openCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+  </header>
+
+  <div class="container">
+    <div class="sidebar">
+      <button onclick="showCategory('all')">All Products</button>
+      <button onclick="showCategory('pets')">Pets</button>
+      <button onclick="showCategory('sheckles')">Sheckles</button>
+      <button onclick="showCategory('bundles')">Bundles</button>
+    </div>
+
+    <div class="products" id="products"></div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="cart-modal" class="modal">
     <div class="modal-content">
-      <h2>Produkt hinzugefügt</h2>
-      <p>Dein Produkt wurde erfolgreich in den Warenkorb gelegt.</p>
-      <button class="modal-close" id="closeModal">Schließen</button>
+      <h2>Checkout</h2>
+      <div id="cart-items"></div>
+      <p style="text-align:center;color:#ccc;">Payment Method: PayPal</p>
+      <div class="checkout-footer">
+        <button class="buy-btn" onclick="buyItems()">Buy</button>
+        <button class="cancel-btn" onclick="closeCart()">Close</button>
+      </div>
     </div>
   </div>
 
+  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
   <script>
-    // Einfacher Demo-Script für Modal & Warenkorb
-    const cartButton = document.querySelector('.cart-button');
-    const modal = document.getElementById('modal');
-    const closeModal = document.getElementById('closeModal');
-    const productButtons = document.querySelectorAll('.product button');
-    let cartCount = 0;
+    /* === Star background animation === */
+    const canvas = document.getElementById('star-canvas');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = innerWidth, H = canvas.height = innerHeight;
+    window.addEventListener('resize', ()=>{ W = canvas.width = innerWidth; H = canvas.height = innerHeight; initStars(); });
+    function rand(a,b){ return Math.random()*(b-a)+a; }
+    let stars = [];
+    const STAR_COUNT = Math.floor((window.innerWidth*window.innerHeight)/28000) + 90;
+    function initStars(){
+      stars = [];
+      for(let i=0;i<STAR_COUNT;i++){
+        stars.push({
+          x: Math.random()*W,
+          y: Math.random()*H,
+          z: rand(0.2,1.2),
+          r: rand(0.3,1.9),
+          dx: rand(-0.04,0.04),
+          dy: rand(-0.03,0.03),
+          tw: Math.random()*1.8
+        });
+      }
+    }
+    initStars();
+    let t=0;
+    function drawStars(){
+      ctx.clearRect(0,0,W,H);
+      const g = ctx.createLinearGradient(0,0,W,H);
+      g.addColorStop(0,'rgba(120,255,200,0.01)');
+      g.addColorStop(1,'rgba(0,200,120,0.01)');
+      ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+      for(const s of stars){
+        const tw = Math.sin(t*0.02*s.tw)*0.7 + 0.8;
+        const size = s.r * tw * s.z;
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${0.55 * s.z * tw})`;
+        ctx.arc(s.x,s.y,Math.max(0.2,size),0,Math.PI*2); ctx.fill();
+        s.x += s.dx*(1+0.6*s.z);
+        s.y += s.dy*(1+0.6*s.z);
+        if(s.x < -10) s.x = W+10; if(s.x > W+10) s.x = -10;
+        if(s.y < -10) s.y = H+10; if(s.y > H+10) s.y = -10;
+      }
+      t++; requestAnimationFrame(drawStars);
+    }
+    drawStars();
 
-    productButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        cartCount++;
-        cartButton.textContent = `Warenkorb (${cartCount})`;
-        modal.style.display = 'flex';
+    /* === Your original script (unchanged) === */
+    let productsData = [];
+    let cart = [];
+    function playClick() {
+      const audio = document.getElementById("click-sound");
+      if (audio && audio.play) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      }
+    }
+    function showProducts(filter) {
+      const container = document.getElementById("products");
+      container.innerHTML = "";
+      const filtered = (filter === "all" || !filter) ? productsData : productsData.filter(p => p.category === filter);
+      filtered.forEach(product => {
+        const el = document.createElement("div");
+        el.classList.add("product");
+        const price = (typeof product.price === "number") ? product.price.toFixed(2) : product.price;
+        el.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <h3>${product.name}</h3>
+          <p>$${price}</p>
+          <button onclick="addToCart(${product.id}); playClick()">Add to Cart</button>
+        `;
+        container.appendChild(el);
       });
-    });
-
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
-
-    // Sidebar Filter (nur optisch)
-    const sidebarButtons = document.querySelectorAll('.sidebar button');
-    sidebarButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        sidebarButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    }
+    function showCategory(cat) {
+      playClick();
+      showProducts(cat);
+    }
+    function addToCart(id) {
+      const product = productsData.find(p => p.id === id);
+      if (product) {
+        cart.push(product);
+        document.getElementById("cart-count").textContent = cart.length;
+      }
+    }
+    function openCart() {
+      playClick();
+      const cartItems = document.getElementById("cart-items");
+      cartItems.innerHTML = "";
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="text-align:center;color:#ccc;">Your cart is empty.</p>';
+      } else {
+        cart.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.classList.add("checkout-item");
+          div.innerHTML = `
+            <span>${item.name} - $${(typeof item.price === "number") ? item.price.toFixed(2) : item.price}</span>
+            <button class="remove-btn" onclick="removeItem(${index})">❌</button>
+          `;
+          cartItems.appendChild(div);
+        });
+      }
+      document.getElementById("cart-modal").style.display = "flex";
+    }
+    function closeCart() {
+      playClick();
+      document.getElementById("cart-modal").style.display = "none";
+    }
+    function removeItem(index) {
+      playClick();
+      cart.splice(index, 1);
+      document.getElementById("cart-count").textContent = cart.length;
+      openCart();
+    }
+    function buyItems() {
+      playClick();
+      if (cart.length > 0) {
+        window.location.href = "https://paypal.me/Mananquil19";
+      }
+    }
+    fetch('products.json')
+      .then(response => {
+        if (!response.ok) throw new Error('Could not load products.json');
+        return response.json();
+      })
+      .then(data => {
+        productsData = Array.isArray(data) ? data : (data.products || []);
+        showProducts('all');
+      })
+      .catch(err => {
+        console.error(err);
+        const container = document.getElementById("products");
+        container.innerHTML = '<p style="color:#f55; padding:30px;">Products could not be loaded. Check products.json.</p>';
       });
-    });
   </script>
 </body>
 </html>
