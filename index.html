@@ -57,9 +57,11 @@
       transition: transform .18s ease, box-shadow .18s ease;
     }
     .cart-button:hover{ transform:translateY(-4px); box-shadow:0 22px 48px rgba(0,150,80,0.12) }
-
     /* ===== Layout ===== */
-    .container{position:relative;z-index:2;display:flex;gap:28px;max-width:1400px;margin:20px auto;padding:0 28px 100px}
+    .container{
+      position:relative;z-index:2;display:flex;gap:28px;
+      max-width:1400px;margin:20px auto;padding:0 28px 100px
+    }
     .sidebar{
       width:240px;
       background:linear-gradient(180deg, rgba(0,40,20,0.7), rgba(0,20,10,0.65));
@@ -75,229 +77,249 @@
       box-shadow:0 12px 36px rgba(0,150,80,0.12);
       transition: transform .14s, box-shadow .14s;
     }
-    .sidebar button:hover{ transform:translateY(-6px); box-shadow:0 18px 46px rgba(0,150,80,0.16) }
+    .sidebar button:hover{
+      transform:translateY(-6px);
+      box-shadow:0 18px 46px rgba(0,150,80,0.16)
+    }
 
     /* ===== Products Grid ===== */
-    .products{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px;align-content:start}
+    .products{
+      flex:1;
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+      gap:28px;align-content:start
+    }
     .product{
-      background:linear-gradient(180deg, rgba(4,40,20,0.9), rgba(2,20,10,0.88));
-      border-radius:18px;padding:20px;
-      border:1px solid rgba(0,255,150,0.10);
-      box-shadow:0 28px 90px rgba(0,0,0,0.75);
-      transition: transform .18s ease, box-shadow .18s ease, filter .18s;
+      background:linear-gradient(180deg,rgba(0,40,20,0.6),rgba(0,20,10,0.55));
+      border-radius:16px;overflow:hidden;
+      border:1px solid rgba(0,255,150,0.08);
+      box-shadow:0 20px 60px rgba(0,40,20,0.4);
+      backdrop-filter: blur(4px);
+      transition:transform .18s ease, box-shadow .18s ease;
     }
-    .product:hover{ transform:translateY(-10px) scale(1.02); box-shadow:0 40px 120px rgba(0,255,160,0.18); filter:brightness(1.02) }
-    .product img{width:100%;height:240px;object-fit:cover;border-radius:14px;margin-bottom:14px;background:linear-gradient(180deg,#222,#111)}
-    .product h3{font-size:22px;margin-bottom:8px}
-    .product p{font-size:18px;color:#d6ffec;margin-bottom:12px;font-weight:800}
+    .product:hover{
+      transform:translateY(-6px);
+      box-shadow:0 28px 72px rgba(0,150,80,0.16)
+    }
+    .product img{width:100%;height:220px;object-fit:cover}
+    .product h3{padding:16px;font-size:20px;color:#caffdd}
+    .product p{padding:0 16px 16px;color:#c6f3de}
     .product button{
-      width:100%;padding:14px;border-radius:14px;border:none;
+      display:block;width:calc(100% - 32px);margin:0 auto 16px;
+      padding:12px;border-radius:12px;border:none;
       background:linear-gradient(90deg,#00ff88,#00b46d);
-      color:#012b16;font-weight:900;font-size:18px;cursor:pointer;
-      transition:transform .12s;
+      color:#012b16;font-weight:900;font-size:16px;
+      box-shadow:0 10px 28px rgba(0,150,80,0.14);
+      cursor:pointer;transition:transform .14s, box-shadow .14s;
     }
-    .product button:hover{transform:translateY(-5px)}
+    .product button:hover{
+      transform:translateY(-4px);
+      box-shadow:0 14px 36px rgba(0,150,80,0.18)
+    }
 
     /* ===== Modal ===== */
-    .modal{position:fixed;inset:0;z-index:12;display:none;align-items:center;justify-content:center;
-      background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.9));padding:26px}
+    .modal{
+      display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%;
+      background-color:rgba(0,0,0,0.8);padding-top:100px
+    }
     .modal-content{
-      width:400px;background:linear-gradient(180deg, rgba(0,40,20,0.96), rgba(0,20,10,0.98));
-      border-radius:16px;padding:20px;
-      border:1px solid rgba(0,255,150,0.12);
-      box-shadow:0 36px 120px rgba(0,0,0,0.9);
+      background:linear-gradient(180deg,rgba(0,40,20,0.9),rgba(0,20,10,0.85));
+      margin:auto;padding:20px;border:1px solid rgba(0,255,150,0.12);
+      width:80%;border-radius:16px;color:#fff;
+      max-width:600px;
     }
-    .modal h2{color:#d6ffe7;margin-bottom:10px;text-align:center}
-    .checkout-item{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:10px
-    }
-    .remove-btn{background:none;color:#ff7d7d;border:none;font-size:18px;cursor:pointer}
-    .checkout-footer{display:flex;justify-content:center;gap:12px;margin-top:18px}
-    .buy-btn{
-      padding:10px 20px;background:linear-gradient(90deg,#00ff88,#00b46d);
-      color:#012b16;font-weight:900;border:none;border-radius:8px;cursor:pointer;
-    }
-    .buy-btn:hover{background:linear-gradient(90deg,#00e67a,#009f5f)}
-    .cancel-btn{
-      padding:10px 20px;background:#444;color:white;border:none;border-radius:8px;cursor:pointer;
-    }
-    .cancel-btn:hover{background:#666}
+    .close{color:#aaa;float:right;font-size:28px;font-weight:bold;cursor:pointer}
+    .close:hover,.close:focus{color:#fff;text-decoration:none;cursor:pointer}
 
-    /* Cart badge */
-    #cart-count{display:inline-block;padding:2px 8px;border-radius:999px;background:linear-gradient(90deg,#d6ffeb,#9effce);color:#01301c;font-weight:900;margin-left:6px}
+    /* ===== Responsive Scaling ===== */
+    @media (max-width: 1024px) {
+      .container {
+        flex-direction: column;
+        padding: 0 16px 60px;
+        margin: 20px auto;
+      }
+      .sidebar {
+        width: 100%;
+        margin-bottom: 20px;
+        box-shadow: none;
+        border: none;
+        backdrop-filter: none;
+      }
+      .products {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px 20px;
+      }
+      header h1 {
+        font-size: 24px;
+        margin-bottom: 12px;
+      }
+      .cart-button {
+        width: 100%;
+        font-size: 16px;
+        padding: 12px 0;
+        border-radius: 12px;
+      }
+      .products {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .product img {
+        height: 180px;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Canvas & Nebula -->
+  <!-- Starfield Background -->
   <canvas id="star-canvas"></canvas>
-  <div class="nebula" aria-hidden="true"></div>
-  <div class="gloss" aria-hidden="true"></div>
+  <div class="nebula"></div>
+  <div class="gloss"></div>
 
+  <!-- Header -->
   <header>
     <h1>Garden Mart</h1>
-    <button class="cart-button" onclick="openCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+    <button id="cart-btn" class="cart-button">
+      Warenkorb <span id="cart-count">0</span>
+    </button>
   </header>
 
+  <!-- Main Content -->
   <div class="container">
-    <div class="sidebar">
-      <button onclick="showCategory('all')">All Products</button>
-      <button onclick="showCategory('pets')">Pets</button>
-      <button onclick="showCategory('sheckles')">Sheckles</button>
-      <button onclick="showCategory('bundles')">Bundles</button>
-    </div>
+    <!-- Sidebar Categories -->
+    <aside class="sidebar">
+      <button onclick="filterCategory('all')">Alle</button>
+      <button onclick="filterCategory('pflanzen')">Pflanzen</button>
+      <button onclick="filterCategory('werkzeuge')">Werkzeuge</button>
+      <button onclick="filterCategory('erde')">Erde & Dünger</button>
+      <button onclick="filterCategory('deko')">Dekoration</button>
+    </aside>
 
-    <div class="products" id="products"></div>
+    <!-- Product Grid -->
+    <section class="products" id="product-list">
+      <div class="product" data-category="pflanzen">
+        <img src="images/pflanze1.jpg" alt="Pflanze 1">
+        <h3>Ficus Elastica</h3>
+        <p>Robuste Zimmerpflanze mit großen, glänzenden Blättern.</p>
+        <button onclick="addToCart('Ficus Elastica')">In den Warenkorb</button>
+      </div>
+      <div class="product" data-category="pflanzen">
+        <img src="images/pflanze2.jpg" alt="Pflanze 2">
+        <h3>Monstera Deliciosa</h3>
+        <p>Trendige Pflanze mit auffälligen, geschlitzten Blättern.</p>
+        <button onclick="addToCart('Monstera Deliciosa')">In den Warenkorb</button>
+      </div>
+      <div class="product" data-category="werkzeuge">
+        <img src="images/werkzeug1.jpg" alt="Werkzeug 1">
+        <h3>Gartenschere</h3>
+        <p>Präzisionsschere für den perfekten Pflanzenschnitt.</p>
+        <button onclick="addToCart('Gartenschere')">In den Warenkorb</button>
+      </div>
+      <div class="product" data-category="erde">
+        <img src="images/erde1.jpg" alt="Erde">
+        <h3>Bio Blumenerde</h3>
+        <p>Nährstoffreiche Erde für optimales Pflanzenwachstum.</p>
+        <button onclick="addToCart('Bio Blumenerde')">In den Warenkorb</button>
+      </div>
+      <div class="product" data-category="deko">
+        <img src="images/deko1.jpg" alt="Dekoration">
+        <h3>Keramik Übertopf</h3>
+        <p>Handgefertigter Übertopf für stilvolle Akzente.</p>
+        <button onclick="addToCart('Keramik Übertopf')">In den Warenkorb</button>
+      </div>
+    </section>
   </div>
 
-  <!-- Checkout Modal -->
+  <!-- Cart Modal -->
   <div id="cart-modal" class="modal">
     <div class="modal-content">
-      <h2>Checkout</h2>
-      <div id="cart-items"></div>
-      <p style="text-align:center;color:#ccc;">Payment Method: PayPal</p>
-      <div class="checkout-footer">
-        <button class="buy-btn" onclick="buyItems()">Buy</button>
-        <button class="cancel-btn" onclick="closeCart()">Close</button>
-      </div>
+      <span class="close" onclick="closeCart()">&times;</span>
+      <h2>Warenkorb</h2>
+      <ul id="cart-items"></ul>
     </div>
   </div>
-
-  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
-
   <script>
-    /* === Star background animation === */
+    /* === Starfield Animation === */
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
-    let W = canvas.width = innerWidth, H = canvas.height = innerHeight;
-    window.addEventListener('resize', ()=>{ W = canvas.width = innerWidth; H = canvas.height = innerHeight; initStars(); });
-    function rand(a,b){ return Math.random()*(b-a)+a; }
     let stars = [];
-    const STAR_COUNT = Math.floor((window.innerWidth*window.innerHeight)/28000) + 90;
-    function initStars(){
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
       stars = [];
-      for(let i=0;i<STAR_COUNT;i++){
+      for (let i = 0; i < 150; i++) {
         stars.push({
-          x: Math.random()*W,
-          y: Math.random()*H,
-          z: rand(0.2,1.2),
-          r: rand(0.3,1.9),
-          dx: rand(-0.04,0.04),
-          dy: rand(-0.03,0.03),
-          tw: Math.random()*1.8
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.2,
+          alpha: Math.random(),
+          speed: 0.15 + Math.random() * 0.25
         });
       }
     }
-    initStars();
-    let t=0;
-    function drawStars(){
-      ctx.clearRect(0,0,W,H);
-      const g = ctx.createLinearGradient(0,0,W,H);
-      g.addColorStop(0,'rgba(120,255,200,0.01)');
-      g.addColorStop(1,'rgba(0,200,120,0.01)');
-      ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
-      for(const s of stars){
-        const tw = Math.sin(t*0.02*s.tw)*0.7 + 0.8;
-        const size = s.r * tw * s.z;
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#fff';
+      stars.forEach(star => {
+        ctx.globalAlpha = star.alpha;
         ctx.beginPath();
-        ctx.fillStyle = `rgba(255,255,255,${0.55 * s.z * tw})`;
-        ctx.arc(s.x,s.y,Math.max(0.2,size),0,Math.PI*2); ctx.fill();
-        s.x += s.dx*(1+0.6*s.z);
-        s.y += s.dy*(1+0.6*s.z);
-        if(s.x < -10) s.x = W+10; if(s.x > W+10) s.x = -10;
-        if(s.y < -10) s.y = H+10; if(s.y > H+10) s.y = -10;
-      }
-      t++; requestAnimationFrame(drawStars);
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+        star.y += star.speed;
+        if (star.y > canvas.height) star.y = 0;
+      });
+      requestAnimationFrame(drawStars);
     }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
     drawStars();
 
-    /* === Your original script (unchanged) === */
-    let productsData = [];
+    /* === Product Filtering === */
+    function filterCategory(category) {
+      document.querySelectorAll('.product').forEach(prod => {
+        prod.style.display = (category === 'all' || prod.dataset.category === category) ? 'block' : 'none';
+      });
+    }
+
+    /* === Cart Logic === */
     let cart = [];
-    function playClick() {
-      const audio = document.getElementById("click-sound");
-      if (audio && audio.play) {
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
-      }
+
+    function addToCart(productName) {
+      cart.push(productName);
+      document.getElementById('cart-count').textContent = cart.length;
     }
-    function showProducts(filter) {
-      const container = document.getElementById("products");
-      container.innerHTML = "";
-      const filtered = (filter === "all" || !filter) ? productsData : productsData.filter(p => p.category === filter);
-      filtered.forEach(product => {
-        const el = document.createElement("div");
-        el.classList.add("product");
-        const price = (typeof product.price === "number") ? product.price.toFixed(2) : product.price;
-        el.innerHTML = `
-          <img src="${product.image}" alt="${product.name}">
-          <h3>${product.name}</h3>
-          <p>$${price}</p>
-          <button onclick="addToCart(${product.id}); playClick()">Add to Cart</button>
-        `;
-        container.appendChild(el);
+
+    document.getElementById('cart-btn').addEventListener('click', () => {
+      const list = document.getElementById('cart-items');
+      list.innerHTML = '';
+      cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        list.appendChild(li);
       });
-    }
-    function showCategory(cat) {
-      playClick();
-      showProducts(cat);
-    }
-    function addToCart(id) {
-      const product = productsData.find(p => p.id === id);
-      if (product) {
-        cart.push(product);
-        document.getElementById("cart-count").textContent = cart.length;
-      }
-    }
-    function openCart() {
-      playClick();
-      const cartItems = document.getElementById("cart-items");
-      cartItems.innerHTML = "";
-      if (cart.length === 0) {
-        cartItems.innerHTML = '<p style="text-align:center;color:#ccc;">Your cart is empty.</p>';
-      } else {
-        cart.forEach((item, index) => {
-          const div = document.createElement("div");
-          div.classList.add("checkout-item");
-          div.innerHTML = `
-            <span>${item.name} - $${(typeof item.price === "number") ? item.price.toFixed(2) : item.price}</span>
-            <button class="remove-btn" onclick="removeItem(${index})">❌</button>
-          `;
-          cartItems.appendChild(div);
-        });
-      }
-      document.getElementById("cart-modal").style.display = "flex";
-    }
+      document.getElementById('cart-modal').style.display = 'block';
+    });
+
     function closeCart() {
-      playClick();
-      document.getElementById("cart-modal").style.display = "none";
+      document.getElementById('cart-modal').style.display = 'none';
     }
-    function removeItem(index) {
-      playClick();
-      cart.splice(index, 1);
-      document.getElementById("cart-count").textContent = cart.length;
-      openCart();
-    }
-    function buyItems() {
-      playClick();
-      if (cart.length > 0) {
-        window.location.href = "https://paypal.me/Mananquil19";
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('cart-modal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
       }
     }
-    fetch('products.json')
-      .then(response => {
-        if (!response.ok) throw new Error('Could not load products.json');
-        return response.json();
-      })
-      .then(data => {
-        productsData = Array.isArray(data) ? data : (data.products || []);
-        showProducts('all');
-      })
-      .catch(err => {
-        console.error(err);
-        const container = document.getElementById("products");
-        container.innerHTML = '<p style="color:#f55; padding:30px;">Products could not be loaded. Check products.json.</p>';
-      });
   </script>
 </body>
 </html>
