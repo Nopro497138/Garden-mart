@@ -11,91 +11,169 @@
     "name": "Disco bee",
     "price": "8.00",
     "category": "pets",
-    "image": "images/bee.png"
+    "image": "images/bee.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "golden-wings", "name": "Golden Wings", "delta": 2.00 },
+      { "id": "sparkle-effect", "name": "Sparkle Effect", "delta": 1.50 },
+      { "id": "neon-stripes", "name": "Neon Stripes", "delta": 3.00 }
+    ]
   },
   {
     "id": 3,
     "name": "Butter fly",
     "price": "6.00",
     "category": "pets",
-    "image": "images/butter.png"
+    "image": "images/butter.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "iridescent", "name": "Iridescent", "delta": 3.00 },
+      { "id": "shimmer", "name": "Shimmer", "delta": 2.50 },
+      { "id": "giant-wings", "name": "Giant Wings", "delta": 4.00 }
+    ]
   },
   {
     "id": 4,
     "name": "Raccoon",
     "price": "8.00",
     "category": "pets",
-    "image": "images/raccoon.png"
+    "image": "images/raccoon.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "masked", "name": "Masked", "delta": 1.00 },
+      { "id": "bandit-coat", "name": "Bandit Coat", "delta": 2.50 },
+      { "id": "stealth-fur", "name": "Stealth Fur", "delta": 3.50 }
+    ]
   },
   {
     "id": 5,
     "name": "Mimic Octopus",
     "price": "5.00",
     "category": "pets",
-    "image": "images/mimic.png"
+    "image": "images/mimic.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "chromatic-skin", "name": "Chromatic Skin", "delta": 3.00 },
+      { "id": "giant-tentacle", "name": "Giant Tentacle", "delta": 4.00 },
+      { "id": "camouflage", "name": "Camouflage", "delta": 2.00 }
+    ]
   },
   {
     "id": 6,
     "name": "Queen bee",
     "price": "8.00",
     "category": "pets",
-    "image": "images/queen.png"
+    "image": "images/queen.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "royal-crown", "name": "Royal Crown", "delta": 5.00 },
+      { "id": "golden-pollen", "name": "Golden Pollen", "delta": 3.00 },
+      { "id": "regal-wings", "name": "Regal Wings", "delta": 4.00 }
+    ]
   },
   {
     "id": 7,
     "name": "Dragonfly",
     "price": "5.00",
     "category": "pets",
-    "image": "images/dragonfly.png"
+    "image": "images/dragonfly.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "luminescent", "name": "Luminescent", "delta": 2.00 },
+      { "id": "speed-boost", "name": "Speed Boost", "delta": 1.50 },
+      { "id": "crystal-wings", "name": "Crystal Wings", "delta": 3.00 }
+    ]
   },
   {
     "id": 8,
     "name": "Chicken Zombie",
     "price": "2.50",
     "category": "pets",
-    "image": "images/zombie.png"
+    "image": "images/zombie.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "petrified", "name": "Petrified", "delta": 1.00 },
+      { "id": "rotten-glow", "name": "Rotten Glow", "delta": 0.75 },
+      { "id": "bone-armor", "name": "Bone Armor", "delta": 2.00 }
+    ]
   },
   {
     "id": 9,
     "name": "Kitsune",
     "price": "25.00",
     "category": "pets",
-    "image": "images/kitsune.png"
+    "image": "images/kitsune.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "corrupted", "name": "Corrupted", "delta": 8.00 },
+      { "id": "celestial-tails", "name": "Celestial Tails", "delta": 10.00 },
+      { "id": "nine-tail-aura", "name": "Nine-Tail Aura", "delta": 12.00 }
+    ]
   },
   {
     "id": 10,
     "name": "T-rex",
     "price": "5.00",
     "category": "pets",
-    "image": "images/trex.png"
+    "image": "images/trex.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "armored", "name": "Armored", "delta": 4.00 },
+      { "id": "roaring", "name": "Roaring", "delta": 2.50 },
+      { "id": "spiked", "name": "Spiked", "delta": 3.50 }
+    ]
   },
   {
     "id": 11,
     "name": "Spinosaurus",
     "price": "5.00",
     "category": "pets",
-    "image": "images/spino.png"
+    "image": "images/spino.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "sail-glow", "name": "Sail Glow", "delta": 3.00 },
+      { "id": "aquatic-skin", "name": "Aquatic Skin", "delta": 2.50 },
+      { "id": "giant", "name": "Giant", "delta": 5.00 }
+    ]
   },
   {
     "id": 12,
     "name": "French fry Ferret",
     "price": "5.00",
     "category": "pets",
-    "image": "images/french.png"
+    "image": "images/french.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "extra-crispy", "name": "Extra Crispy", "delta": 1.00 },
+      { "id": "fries-coat", "name": "Fries Coat", "delta": 1.50 },
+      { "id": "cartoonish", "name": "Cartoonish", "delta": 0.50 }
+    ]
   },
   {
     "id": 13,
     "name": "Fennec fox",
     "price": "5.00",
     "category": "pets",
-    "image": "images/fennec.png"
+    "image": "images/fennec.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "desert-coat", "name": "Desert Coat", "delta": 1.50 },
+      { "id": "big-ears", "name": "Big Ears", "delta": 2.00 },
+      { "id": "night-vision", "name": "Night Vision", "delta": 2.50 }
+    ]
   },
   {
     "id": 14,
     "name": "Corrupted Kitsune",
     "price": "5.00",
     "category": "pets",
-    "image": "images/corrupted.png"
+    "image": "images/corrupted.png",
+    "mutations": [
+      { "id": "none", "name": "None", "delta": 0 },
+      { "id": "deep-corruption", "name": "Deep Corruption", "delta": 3.00 },
+      { "id": "shadow-veil", "name": "Shadow Veil", "delta": 4.00 },
+      { "id": "abyssal-tails", "name": "Abyssal Tails", "delta": 5.00 }
+    ]
   },
   {
     "id": 15,
