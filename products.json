@@ -134,9 +134,20 @@
     "image": "images/dragonfly.png",
     "mutations": [
       { "id": "none", "name": "None", "delta": 0 },
-      { "id": "luminescent", "name": "Luminescent", "delta": 2.00 },
-      { "id": "speed-boost", "name": "Speed Boost", "delta": 1.50 },
-      { "id": "crystal-wings", "name": "Crystal Wings", "delta": 3.00 }
+      { "id": "shiny", "name": "Shiny mutation", "delta": 0.50 },
+      { "id": "inverted", "name": "Inverted mutation", "delta": 1.00 },
+      { "id": "frozen", "name": "Frozen mutation", "delta": 1.50 },
+      { "id": "windy", "name": "Windy mutation", "delta": 2.00 },
+      { "id": "golden", "name": "Golden mutation", "delta": 2.50 },
+      { "id": "mega", "name": "Mega mutation", "delta": 3.00 },
+      { "id": "tiny", "name": "Tiny mutation", "delta": 3.50 },
+      { "id": "ironskin", "name": "Ironskin", "delta": 4.00 },
+      { "id": "radiant", "name": "Radiant mutation", "delta": 4.50 },
+      { "id": "schocked", "name": "Schocked mutation", "delta": 5.00 },
+      { "id": "tranquil", "name": "Tranquil mutation", "delta": 5.50 },
+      { "id": "corrupted", "name": "Corrupted mutation", "delta": 6.00 },
+      { "id": "rainbow", "name": "Rainbow mutation", "delta": 6.50 },
+      { "id": "ascended", "name": "Ascended mutation", "delta": 8.00 }
     ]
   },
   {
@@ -147,9 +158,20 @@
     "image": "images/zombie.png",
     "mutations": [
       { "id": "none", "name": "None", "delta": 0 },
-      { "id": "petrified", "name": "Petrified", "delta": 1.00 },
-      { "id": "rotten-glow", "name": "Rotten Glow", "delta": 0.75 },
-      { "id": "bone-armor", "name": "Bone Armor", "delta": 2.00 }
+      { "id": "shiny", "name": "Shiny mutation", "delta": 0.50 },
+      { "id": "inverted", "name": "Inverted mutation", "delta": 1.00 },
+      { "id": "frozen", "name": "Frozen mutation", "delta": 1.50 },
+      { "id": "windy", "name": "Windy mutation", "delta": 2.00 },
+      { "id": "golden", "name": "Golden mutation", "delta": 2.50 },
+      { "id": "mega", "name": "Mega mutation", "delta": 3.00 },
+      { "id": "tiny", "name": "Tiny mutation", "delta": 3.50 },
+      { "id": "ironskin", "name": "Ironskin", "delta": 4.00 },
+      { "id": "radiant", "name": "Radiant mutation", "delta": 4.50 },
+      { "id": "schocked", "name": "Schocked mutation", "delta": 5.00 },
+      { "id": "tranquil", "name": "Tranquil mutation", "delta": 5.50 },
+      { "id": "corrupted", "name": "Corrupted mutation", "delta": 6.00 },
+      { "id": "rainbow", "name": "Rainbow mutation", "delta": 6.50 },
+      { "id": "ascended", "name": "Ascended mutation", "delta": 8.00 }
     ]
   },
   {
@@ -160,9 +182,20 @@
     "image": "images/kitsune.png",
     "mutations": [
       { "id": "none", "name": "None", "delta": 0 },
-      { "id": "corrupted", "name": "Corrupted", "delta": 8.00 },
-      { "id": "celestial-tails", "name": "Celestial Tails", "delta": 10.00 },
-      { "id": "nine-tail-aura", "name": "Nine-Tail Aura", "delta": 12.00 }
+      { "id": "shiny", "name": "Shiny mutation", "delta": 0.50 },
+      { "id": "inverted", "name": "Inverted mutation", "delta": 1.00 },
+      { "id": "frozen", "name": "Frozen mutation", "delta": 1.50 },
+      { "id": "windy", "name": "Windy mutation", "delta": 2.00 },
+      { "id": "golden", "name": "Golden mutation", "delta": 2.50 },
+      { "id": "mega", "name": "Mega mutation", "delta": 3.00 },
+      { "id": "tiny", "name": "Tiny mutation", "delta": 3.50 },
+      { "id": "ironskin", "name": "Ironskin", "delta": 4.00 },
+      { "id": "radiant", "name": "Radiant mutation", "delta": 4.50 },
+      { "id": "schocked", "name": "Schocked mutation", "delta": 5.00 },
+      { "id": "tranquil", "name": "Tranquil mutation", "delta": 5.50 },
+      { "id": "corrupted", "name": "Corrupted mutation", "delta": 6.00 },
+      { "id": "rainbow", "name": "Rainbow mutation", "delta": 6.50 },
+      { "id": "ascended", "name": "Ascended mutation", "delta": 8.00 }
     ]
   },
   {
@@ -173,9 +206,20 @@
     "image": "images/trex.png",
     "mutations": [
       { "id": "none", "name": "None", "delta": 0 },
-      { "id": "armored", "name": "Armored", "delta": 4.00 },
-      { "id": "roaring", "name": "Roaring", "delta": 2.50 },
-      { "id": "spiked", "name": "Spiked", "delta": 3.50 }
+      { "id": "shiny", "name": "Shiny mutation", "delta": 0.50 },
+      { "id": "inverted", "name": "Inverted mutation", "delta": 1.00 },
+      { "id": "frozen", "name": "Frozen mutation", "delta": 1.50 },
+      { "id": "windy", "name": "Windy mutation", "delta": 2.00 },
+      { "id": "golden", "name": "Golden mutation", "delta": 2.50 },
+      { "id": "mega", "name": "Mega mutation", "delta": 3.00 },
+      { "id": "tiny", "name": "Tiny mutation", "delta": 3.50 },
+      { "id": "ironskin", "name": "Ironskin", "delta": 4.00 },
+      { "id": "radiant", "name": "Radiant mutation", "delta": 4.50 },
+      { "id": "schocked", "name": "Schocked mutation", "delta": 5.00 },
+      { "id": "tranquil", "name": "Tranquil mutation", "delta": 5.50 },
+      { "id": "corrupted", "name": "Corrupted mutation", "delta": 6.00 },
+      { "id": "rainbow", "name": "Rainbow mutation", "delta": 6.50 },
+      { "id": "ascended", "name": "Ascended mutation", "delta": 8.00 }
     ]
   },
   {
@@ -186,9 +230,20 @@
     "image": "images/spino.png",
     "mutations": [
       { "id": "none", "name": "None", "delta": 0 },
-      { "id": "sail-glow", "name": "Sail Glow", "delta": 3.00 },
-      { "id": "aquatic-skin", "name": "Aquatic Skin", "delta": 2.50 },
-      { "id": "giant", "name": "Giant", "delta": 5.00 }
+      { "id": "shiny", "name": "Shiny mutation", "delta": 0.50 },
+      { "id": "inverted", "name": "Inverted mutation", "delta": 1.00 },
+      { "id": "frozen", "name": "Frozen mutation", "delta": 1.50 },
+      { "id": "windy", "name": "Windy mutation", "delta": 2.00 },
+      { "id": "golden", "name": "Golden mutation", "delta": 2.50 },
+      { "id": "mega", "name": "Mega mutation", "delta": 3.00 },
+      { "id": "tiny", "name": "Tiny mutation", "delta": 3.50 },
+      { "id": "ironskin", "name": "Ironskin", "delta": 4.00 },
+      { "id": "radiant", "name": "Radiant mutation", "delta": 4.50 },
+      { "id": "schocked", "name": "Schocked mutation", "delta": 5.00 },
+      { "id": "tranquil", "name": "Tranquil mutation", "delta": 5.50 },
+      { "id": "corrupted", "name": "Corrupted mutation", "delta": 6.00 },
+      { "id": "rainbow", "name": "Rainbow mutation", "delta": 6.50 },
+      { "id": "ascended", "name": "Ascended mutation", "delta": 8.00 }
     ]
   },
   {
@@ -199,9 +254,20 @@
     "image": "images/french.png",
     "mutations": [
       { "id": "none", "name": "None", "delta": 0 },
-      { "id": "extra-crispy", "name": "Extra Crispy", "delta": 1.00 },
-      { "id": "fries-coat", "name": "Fries Coat", "delta": 1.50 },
-      { "id": "cartoonish", "name": "Cartoonish", "delta": 0.50 }
+      { "id": "shiny", "name": "Shiny mutation", "delta": 0.50 },
+      { "id": "inverted", "name": "Inverted mutation", "delta": 1.00 },
+      { "id": "frozen", "name": "Frozen mutation", "delta": 1.50 },
+      { "id": "windy", "name": "Windy mutation", "delta": 2.00 },
+      { "id": "golden", "name": "Golden mutation", "delta": 2.50 },
+      { "id": "mega", "name": "Mega mutation", "delta": 3.00 },
+      { "id": "tiny", "name": "Tiny mutation", "delta": 3.50 },
+      { "id": "ironskin", "name": "Ironskin", "delta": 4.00 },
+      { "id": "radiant", "name": "Radiant mutation", "delta": 4.50 },
+      { "id": "schocked", "name": "Schocked mutation", "delta": 5.00 },
+      { "id": "tranquil", "name": "Tranquil mutation", "delta": 5.50 },
+      { "id": "corrupted", "name": "Corrupted mutation", "delta": 6.00 },
+      { "id": "rainbow", "name": "Rainbow mutation", "delta": 6.50 },
+      { "id": "ascended", "name": "Ascended mutation", "delta": 8.00 }
     ]
   },
   {
@@ -212,9 +278,20 @@
     "image": "images/fennec.png",
     "mutations": [
       { "id": "none", "name": "None", "delta": 0 },
-      { "id": "desert-coat", "name": "Desert Coat", "delta": 1.50 },
-      { "id": "big-ears", "name": "Big Ears", "delta": 2.00 },
-      { "id": "night-vision", "name": "Night Vision", "delta": 2.50 }
+      { "id": "shiny", "name": "Shiny mutation", "delta": 0.50 },
+      { "id": "inverted", "name": "Inverted mutation", "delta": 1.00 },
+      { "id": "frozen", "name": "Frozen mutation", "delta": 1.50 },
+      { "id": "windy", "name": "Windy mutation", "delta": 2.00 },
+      { "id": "golden", "name": "Golden mutation", "delta": 2.50 },
+      { "id": "mega", "name": "Mega mutation", "delta": 3.00 },
+      { "id": "tiny", "name": "Tiny mutation", "delta": 3.50 },
+      { "id": "ironskin", "name": "Ironskin", "delta": 4.00 },
+      { "id": "radiant", "name": "Radiant mutation", "delta": 4.50 },
+      { "id": "schocked", "name": "Schocked mutation", "delta": 5.00 },
+      { "id": "tranquil", "name": "Tranquil mutation", "delta": 5.50 },
+      { "id": "corrupted", "name": "Corrupted mutation", "delta": 6.00 },
+      { "id": "rainbow", "name": "Rainbow mutation", "delta": 6.50 },
+      { "id": "ascended", "name": "Ascended mutation", "delta": 8.00 }
     ]
   },
   {
@@ -225,9 +302,20 @@
     "image": "images/corrupted.png",
     "mutations": [
       { "id": "none", "name": "None", "delta": 0 },
-      { "id": "deep-corruption", "name": "Deep Corruption", "delta": 3.00 },
-      { "id": "shadow-veil", "name": "Shadow Veil", "delta": 4.00 },
-      { "id": "abyssal-tails", "name": "Abyssal Tails", "delta": 5.00 }
+      { "id": "shiny", "name": "Shiny mutation", "delta": 0.50 },
+      { "id": "inverted", "name": "Inverted mutation", "delta": 1.00 },
+      { "id": "frozen", "name": "Frozen mutation", "delta": 1.50 },
+      { "id": "windy", "name": "Windy mutation", "delta": 2.00 },
+      { "id": "golden", "name": "Golden mutation", "delta": 2.50 },
+      { "id": "mega", "name": "Mega mutation", "delta": 3.00 },
+      { "id": "tiny", "name": "Tiny mutation", "delta": 3.50 },
+      { "id": "ironskin", "name": "Ironskin", "delta": 4.00 },
+      { "id": "radiant", "name": "Radiant mutation", "delta": 4.50 },
+      { "id": "schocked", "name": "Schocked mutation", "delta": 5.00 },
+      { "id": "tranquil", "name": "Tranquil mutation", "delta": 5.50 },
+      { "id": "corrupted", "name": "Corrupted mutation", "delta": 6.00 },
+      { "id": "rainbow", "name": "Rainbow mutation", "delta": 6.50 },
+      { "id": "ascended", "name": "Ascended mutation", "delta": 8.00 }
     ]
   },
   {
