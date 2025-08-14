@@ -262,16 +262,16 @@
     }
     drawStars();
 
-    /* === Your original script (modified minimally to add mutations for pets) === */
+    /* === Script: load mutations from products.json when available === */
     let productsData = [];
     let cart = [];
 
-    // Mutation definitions (you can adjust names & price deltas here)
-    const MUTATIONS = [
+    // default mutations used if product doesn't have its own "mutations" field
+    const DEFAULT_MUTATIONS = [
       { id: 'none', name: 'None', delta: 0 },
-      { id: 'albino', name: 'Albino (+$5.00)', delta: 5.00 },
-      { id: 'giant', name: 'Giant (+$10.00)', delta: 10.00 },
-      { id: 'winged', name: 'Winged (+$15.00)', delta: 15.00 }
+      { id: 'albino', name: 'Albino', delta: 5.00 },
+      { id: 'giant', name: 'Giant', delta: 10.00 },
+      { id: 'winged', name: 'Winged', delta: 15.00 }
     ];
 
     function playClick() {
@@ -282,11 +282,28 @@
       }
     }
 
-    // Format price helper
     function fmtPrice(v) {
       const n = (typeof v === 'number') ? v : parseFloat(v);
       if (isNaN(n)) return v;
       return n.toFixed(2);
+    }
+
+    function normalizeMutations(arr) {
+      // Accept several shapes:
+      // { id, name, delta } OR { name, price } OR { name, delta }
+      const out = Array.isArray(arr) ? arr.map((m, i) => {
+        const name = m.name || m.label || ('Option ' + (i+1));
+        const id = m.id || name.toString().toLowerCase().replace(/\s+/g,'-') || ('m' + i);
+        let delta = 0;
+        if (m.delta !== undefined) delta = parseFloat(m.delta);
+        else if (m.price !== undefined) delta = parseFloat(m.price);
+        else if (m.amount !== undefined) delta = parseFloat(m.amount);
+        if (isNaN(delta)) delta = 0;
+        return { id, name, delta };
+      }) : [];
+      // Ensure a 'none' option exists as first choice
+      if (!out.find(x => x.id === 'none')) out.unshift({ id: 'none', name: 'None', delta: 0 });
+      return out;
     }
 
     // Modified showProducts: uses handleAddClick and opens mutation modal on product click for pets.
@@ -297,7 +314,7 @@
       filtered.forEach(product => {
         const el = document.createElement("div");
         el.classList.add("product");
-        const price = (typeof product.price === "number") ? product.price.toFixed(2) : product.price;
+        const price = fmtPrice(product.price);
         el.innerHTML = `
           <img src="${product.image}" alt="${product.name}">
           <h3>${product.name}</h3>
@@ -329,24 +346,27 @@
       }
     }
 
-    // original addToCart behavior preserved as a helper
     function addToCartSimple(product) {
-      cart.push(product);
+      // preserve old shape for non-mutated items
+      cart.push({
+        id: product.id,
+        name: product.name,
+        image: product.image,
+        price: (typeof product.price === 'number') ? product.price : parseFloat(product.price)
+      });
       document.getElementById("cart-count").textContent = cart.length;
     }
 
-    // New: add to cart with mutation object (mutation.id, mutation.name, mutation.delta)
     function addToCartWithMutation(product, mutation) {
-      // create a shallow copy to avoid mutating original product
       const basePrice = (typeof product.price === 'number') ? product.price : parseFloat(product.price);
-      const delta = mutation && typeof mutation.delta === 'number' ? mutation.delta : 0;
-      const finalPrice = (isNaN(basePrice) ? product.price : (basePrice + delta));
+      const delta = mutation && typeof mutation.delta === 'number' ? mutation.delta : parseFloat(mutation.delta || 0);
+      const finalPrice = (isNaN(basePrice) ? product.price : (basePrice + (isNaN(delta) ? 0 : delta)));
 
       const cartItem = {
         id: product.id,
         name: product.name,
         image: product.image,
-        basePrice: basePrice,
+        basePrice: isNaN(basePrice) ? 0 : basePrice,
         mutation: mutation ? { id: mutation.id, name: mutation.name, delta: mutation.delta } : { id: 'none', name: 'None', delta: 0 },
         price: finalPrice
       };
@@ -367,12 +387,11 @@
           const div = document.createElement("div");
           div.classList.add("checkout-item");
 
-          // If item has mutation object (we added mutated items as objects), show mutation info
           if (item.mutation) {
             div.innerHTML = `
               <div style="display:flex;flex-direction:column;gap:6px;">
                 <strong>${item.name}</strong>
-                <small style="color:#cfefe0">${item.mutation.name === 'None' ? '' : item.mutation.name}</small>
+                <small style="color:#cfefe0">${item.mutation && item.mutation.name !== 'None' ? item.mutation.name : ''}</small>
               </div>
               <div style="text-align:right;">
                 <div>$${fmtPrice(item.price)}</div>
@@ -380,7 +399,6 @@
               </div>
             `;
           } else {
-            // legacy items (added before mutation support) kept working
             const price = (typeof item.price === "number") ? item.price.toFixed(2) : item.price;
             div.innerHTML = `
               <span>${item.name} - $${price}</span>
@@ -421,10 +439,14 @@
       const nameEl = document.getElementById("mutation-product-name");
       nameEl.textContent = `${product.name} — $${fmtPrice(product.price)}`;
 
+      // Determine mutation options: product.mutations (if present) else DEFAULT_MUTATIONS
+      const raw = Array.isArray(product.mutations) ? product.mutations : null;
+      const options = raw ? normalizeMutations(raw) : normalizeMutations(DEFAULT_MUTATIONS);
+
       // render mutation options
       const list = document.getElementById("mutations-list");
       list.innerHTML = "";
-      MUTATIONS.forEach((m, idx) => {
+      options.forEach((m, idx) => {
         const opt = document.createElement("label");
         opt.className = 'mutation-option';
         opt.innerHTML = `
@@ -446,7 +468,7 @@
       const confirmBtn = document.getElementById("mutation-confirm");
       confirmBtn.onclick = () => {
         const selectedId = (document.querySelector('input[name="mutation"]:checked') || {}).value || 'none';
-        const selected = MUTATIONS.find(x => x.id === selectedId) || MUTATIONS[0];
+        const selected = options.find(x => x.id === selectedId) || options[0];
         // Add to cart with mutation
         addToCartWithMutation(product, selected);
         closeMutationModal();
@@ -472,7 +494,7 @@
       if (e.target === document.getElementById('cart-modal')) closeCart();
     });
 
-    /* === load products.json as before === */
+    /* === load products.json and keep product-specific mutations when present === */
     fetch('products.json')
       .then(response => {
         if (!response.ok) throw new Error('Could not load products.json');
@@ -480,6 +502,13 @@
       })
       .then(data => {
         productsData = Array.isArray(data) ? data : (data.products || []);
+        // ensure prices are numbers where possible
+        productsData.forEach(p => {
+          if (p.price !== undefined) {
+            const n = parseFloat(p.price);
+            if (!isNaN(n)) p.price = n;
+          }
+        });
         showProducts('all');
       })
       .catch(err => {
